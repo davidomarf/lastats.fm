@@ -88,7 +88,7 @@ class UserPage extends React.Component {
     let scrobbles = [];
     for (let i = 1; i <= pages; i++) {
       const addToArray = (e, arr) => {
-        if (e.recenttracks.track[0]["@attr"].nowplaying){
+        if (e.recenttracks.track[0]["@attr"]){
           e.recenttracks.track.shift();
         }
         console.log(e.recenttracks.track)
