@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const lastFmAPI = process.env.REACT_APP_LAST_FM_API;
 const lastFmCall =
-  "http://ws.audioscrobbler.com/2.0/?format=json&api_key=" + lastFmAPI;
+  "https://ws.audioscrobbler.com/2.0/?format=json&api_key=" + lastFmAPI;
 
 async function getData(url, f) {
   try {
