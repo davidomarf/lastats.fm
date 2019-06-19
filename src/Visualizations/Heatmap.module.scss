@@ -1,0 +1,33 @@
+.day {
+  fill: #282c3a;
+
+  &:hover {
+    stroke: lighten(#BB0400, 40);
+  }
+}
+
+.color {
+  &-1 {
+    fill: lighten(#BB0400, 45);
+  }
+  &-2 {
+    fill: lighten(#BB0400, 30);
+  }
+  &-3 {
+    fill: lighten(#BB0400, 15);
+  }
+  &-4 {
+    fill: #BB0400;
+  }
+}
+
+.meta-text {
+  &.day-flag {
+    text-align: right;
+    text-anchor: end;
+    fill: lighten(#282c3a, 60);
+  }
+    fill: lighten(#282c3a, 60);
+  font-size: 8.5px;
+  vertical-align: bottom;
+}

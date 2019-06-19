@@ -1,42 +1,17 @@
 import React from "react";
 
-import styles from "./UserPage.module.scss";
+import styles from "./Userpage.module.scss";
 import ReactFullpage from "@fullpage/react-fullpage";
 
 import * as d3 from "d3";
+
+import Heatmap from "../Visualizations/Heatmap"
+
 const axios = require("axios");
 
 const lastFmAPI = process.env.REACT_APP_LAST_FM_API;
 const lastFmCall =
   "http://ws.audioscrobbler.com/2.0/?format=json&api_key=" + lastFmAPI;
-
-class Heatmap extends React.Component {
-  componentDidMount() {
-    const svg = d3
-      .select(`#d3-section-${this.props.title}`)
-      .append("svg")
-      .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "0 0 960 500");
-    svg
-      .append("rect")
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .attr("fill", "blue");
-  }
-
-  render() {
-    return (
-      <>
-        <UserPageSection>
-          <div
-            id={`d3-section-${this.props.title}`}
-            className={styles["graph-container"]}
-          />
-        </UserPageSection>
-      </>
-    );
-  }
-}
 
 class UserPageSection extends React.Component {
   constructor(props) {
@@ -52,11 +27,11 @@ class UserPageSection extends React.Component {
   }
 }
 
-const getData = async (url, f, arr)=> {
+const getData = async (url, f) => {
   try {
     const response = await axios.get(url);
     const data = response.data;
-    f(data, arr);
+    return f(data);
   } catch (error) {
     console.log(error);
   }
@@ -81,20 +56,28 @@ class UserPage extends React.Component {
       .catch(console.log);
   }
 
-  
   setScrobbles() {
     let pages = Math.ceil(this.state.playCount / 200);
-    let url = `${lastFmCall}&method=user.getrecenttracks&limit=200&user=${this.state.user}&page=`
+    let url = `${lastFmCall}&method=user.getrecenttracks&limit=200&user=${
+      this.state.user
+    }&page=`;
+    let scrobblesPromises = [];
     let scrobbles = [];
     for (let i = 1; i <= pages; i++) {
-      const addToArray = (e, arr) => {
-        if (e.recenttracks.track[0]["@attr"]){
+      const returnRecentTracks = e => {
+        if (e.recenttracks.track[0]["@attr"]) {
           e.recenttracks.track.shift();
         }
-        console.log(e.recenttracks.track)
-      }
-      getData(`${url}${i}`, addToArray, scrobbles);
+        return e.recenttracks.track;
+      };
+      scrobblesPromises.push(getData(`${url}${i}`, returnRecentTracks));
     }
+    Promise.all(scrobblesPromises).then(values => {
+      scrobbles = scrobbles.concat(...values);
+      this.setState({
+        scrobbles: scrobbles
+      })
+    });
   }
 
   render() {
@@ -105,7 +88,7 @@ class UserPage extends React.Component {
             <div id="fullpage-wrapper">
               <div className="section">
                 <div className={styles["section-container"]}>
-                  <Heatmap title="Heatmap" user={this.state.user} />
+                  {this.state.scrobbles && <Heatmap title="Heatmap" user={this.state} />}
                 </div>
               </div>
               <div className="section">
