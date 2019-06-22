@@ -3,6 +3,68 @@ import React from "react";
 import styles from "./Heatmap.module.scss";
 import * as d3 from "d3";
 
+var tooltip;
+var tooltip_text;
+
+function formatDate(date) {
+  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+}
+
+// Three function that change the tooltip when user hover / move / leave a cell
+var mouseover = function(d) {
+  tooltip.style("opacity", 0.9);
+  tooltip_text.style("opacity", 1);
+};
+
+var mousemove = function(d) {
+  let day = d3.select(this);
+  tooltip_text
+    .attr("x", d3.mouse(this)[0] + 15)
+    .attr("y", d3.mouse(this)[1])
+    .style("fill", "white")
+    .attr("class", styles["meta-text"])
+    .text(`${day.attr("scrobbles")} scrobbles on ${day.attr("date")}`);
+  tooltip
+    .attr("x", d3.mouse(this)[0] + 10)
+    .attr("y", d3.mouse(this)[1] - 10)
+    .attr("width", tooltip_text.node().getBBox().width + 10)
+    .attr("height", 15);
+};
+
+var mouseleave = function(d) {
+  tooltip.style("opacity", 0);
+  tooltip_text.text("");
+};
+
+function dateToUTC(d) {
+  return (
+    Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 1000
+  );
+}
+
+function makeScrobblingFrequencyArray(scrobbles) {
+  let frequency = [
+    {
+      date: scrobbles[0],
+      count: 1
+    }
+  ];
+
+  for (let i = 1, frequency_i = 0; i < scrobbles.length; i++) {
+    if (frequency[frequency_i].date === scrobbles[i]) {
+      frequency[frequency_i].count++;
+    } else {
+      frequency.push({ date: scrobbles[i], count: 1 });
+      frequency_i++;
+    }
+  }
+  return frequency;
+}
+
+function daysBetweenDates(a, b) {
+  return Math.ceil((a - b) / 86400);
+}
+
 // Using it to render the months name without calling
 // Date.toLocaleDateString() if only the month is needed
 const months = [
@@ -44,6 +106,10 @@ function getDateArray(start, end) {
   return arr;
 }
 
+function getIDFromDay(day) {
+  return `day-${day}`;
+}
+
 /**
  * Function to interpolate colors using a given
  * d3 color palette.
@@ -63,6 +129,14 @@ class Heatmap extends React.Component {
     this.dayArray = [];
     this.maxValue = 343;
     this.numberOfCategories = 8;
+    this.endDate = { date: new Date() };
+    this.endDate.utc = dateToUTC(this.endDate.date);
+    this.startDate = {
+      date: new Date(
+        new Date().setFullYear(this.endDate.date.getFullYear() - 1)
+      )
+    };
+    this.startDate.utc = dateToUTC(this.startDate.date);
   }
 
   /**
@@ -110,70 +184,51 @@ class Heatmap extends React.Component {
         .attr("y", 82)
         .attr("width", 10)
         .attr("height", 10)
-        .attr("class", styles["day"])
         .attr("style", "fill:" + myColor(i));
     }
   }
 
+  getScrobblesInPeriod(period) {
+    let totalScrobbles = this.props.user.scrobbles;
+    return totalScrobbles
+      .map(e => e.date.uts)
+      .filter(e => e > period[0] && e < period[1]);
+  }
+
   draw(svg) {
-    let activity = this.props.user.scrobbles.map(e =>
-      Math.floor(e.date.uts / 86400)
+    let scrobblesInPeriod = this.getScrobblesInPeriod([
+      this.startDate.utc,
+      this.endDate.utc
+    ]);
+
+    scrobblesInPeriod = scrobblesInPeriod.map(e =>
+      daysBetweenDates(e, this.startDate.utc)
     );
-    console.log(activity)
+    let scrobblingFrequency = makeScrobblingFrequencyArray(scrobblesInPeriod);
 
-    let dev_today = new Date();
-    let end = dev_today;
-    let endUTC = Math.floor(
-      Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) / 86400000
-    );
-    // activity = activity.map(d => endUTC - d);
-    let endActivityIndex = undefined;
-    for (let i = 0; i < activity.length; i++) {
-      if (end >= activity[i]) {
-        endActivityIndex = i;
-        break;
-      }
+    this.maxValue = d3.max(scrobblingFrequency, d => d.count);
+
+    for (let i = 0; i < scrobblingFrequency.length; i++) {
+      let id = "#" + getIDFromDay(scrobblingFrequency[i].date);
+      let color = myColor(
+        Math.ceil(
+          this.numberOfCategories *
+            (scrobblingFrequency[i].count / (0.9 * this.maxValue))
+        )
+      );
+      d3.select(id)
+        .style("fill", color)
+        .attr("scrobbles", scrobblingFrequency[i].count);
     }
+  }
 
-    let start = new Date(new Date().setFullYear(dev_today.getFullYear() - 1));
-    let startUTC = Math.floor(
-      Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()) /
-        86400000
-    );
-    let startActivityIndex = activity.length - 1;
-    for (let i = endActivityIndex; i < activity.length; i++) {
-      if (startUTC > activity[i]) {
-        startActivityIndex = i - 1;
-        break;
-      }
-    }
-
-    activity = activity
-      .slice(endActivityIndex, startActivityIndex + 1)
-      .map(d => d - startUTC)
-      .reverse();
-
-    var counts = {};
-
-    for (var i = 0; i < activity.length; i++) {
-      var num = activity[i];
-      counts[num] = counts[num] ? counts[num] + 1 : 1;
-    }
-    let dates = getDateArray(start, end);
-
+  drawYearBase(svg) {
+    let dates = getDateArray(this.startDate.date, this.endDate.date);
     let monthShift = 0;
     let weekShift = 0;
     let drawMonthNextSunday = false;
-    for (let i = 0, j = 0; i < dates.length; i++) {
+    for (let i = 0; i < dates.length; i++) {
       let style = styles["day"];
-      let color = undefined;
-      if (counts[i] !== undefined) {
-        color = myColor(
-          Math.ceil(
-            this.numberOfCategories * (counts[i] / (0.9 * this.maxValue))
-          )
-        ); //Math.ceil(5 * (counts[i] / 30));
-      }
       let weekDay = dates[i].getDay();
       let monthDay = dates[i].getDate();
       if (monthDay === 1) {
@@ -194,14 +249,20 @@ class Heatmap extends React.Component {
         }
       }
 
+      let id = getIDFromDay(i);
       svg
         .append("rect")
         .attr("x", 20 + monthShift + weekShift * 10)
         .attr("y", weekDay * 10)
         .attr("width", 8)
         .attr("height", 8)
+        .attr("id", id)
         .attr("class", style)
-        .attr("style", "fill:" + color);
+        .attr("date", formatDate(dates[i]))
+        .attr("scrobbles", 0)
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave);
     }
   }
 
@@ -211,9 +272,15 @@ class Heatmap extends React.Component {
       .append("svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "-20 -20 640 120");
+
+    // create a tooltip
+
     this.drawLegend(svg);
+    this.drawYearBase(svg);
     this.drawWeekDays(svg);
     this.draw(svg);
+    tooltip = svg.append("rect");
+    tooltip_text = svg.append("text");
   }
 
   render() {

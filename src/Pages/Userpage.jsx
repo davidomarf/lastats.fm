@@ -5,7 +5,7 @@ import ReactFullpage from "@fullpage/react-fullpage";
 
 import * as d3 from "d3";
 
-import Heatmap from "../Visualizations/Heatmap"
+import Heatmap from "../Visualizations/Heatmap";
 
 const axios = require("axios");
 
@@ -76,7 +76,7 @@ class UserPage extends React.Component {
       scrobbles = scrobbles.concat(...values);
       this.setState({
         scrobbles: scrobbles
-      })
+      });
     });
   }
 
@@ -88,7 +88,9 @@ class UserPage extends React.Component {
             <div id="fullpage-wrapper">
               <div className="section">
                 <div className={styles["section-container"]}>
-                  {this.state.scrobbles && <Heatmap title="Heatmap" user={this.state} />}
+                  {this.state.scrobbles && (
+                    <Heatmap title="Heatmap" user={this.state} />
+                  )}
                 </div>
               </div>
               <div className="section">
