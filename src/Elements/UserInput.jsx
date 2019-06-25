@@ -19,7 +19,6 @@ class UserInput extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state.user);
     this.props.history.push("/user/" + this.state.user);
   }
 
