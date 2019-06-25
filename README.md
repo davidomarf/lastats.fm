@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [Tools](#tools)
 - [Installation](#installation)
 - [License](#license)
 
@@ -48,11 +49,36 @@ _italic features_ are planned, but not yet in development.
 - _The `n` most listened to `[songs, artists, albums]` for every `[day, week, month, year]`,
   over `[week, month, year, overal, custom]`._
 
+## Tools
+
+This project is being built using [React](https://reactjs.org/), and [d3.js](https://d3js.org/)
+for the visualizations.
+
 ## Installation
 
-```sh
-$ npm install choo
-```
+To use the tool, you just need to visit https://lastfmstats.herokuapp.com/
+
+To contribute with the development you'll need a working copy of the repo in your working machine.
+
+- You'll need to have `npm` or `yarn` installed.
+
+- Fork the repository.
+
+- Clone and open the directory
+  ```sh
+  $ git clone git@github.com:{user}/lastfm.git
+  $         # https://github.com/{user}/lastfm.git
+  $ cd lastfm
+  ```
+
+- Available scripts
+
+  - `npm start` / `yarn start`
+    -  Runs the app in the development mode. Open http://localhost:3000 to view it in the browser.
+  - `npm test` / `yarn test`
+    - Launches the test runner in the interactive watch mode.
+  - `npm run build` / `yarn run build`
+    - Builds the app for production to the build folder.
 
 ## License
 
