@@ -3,8 +3,6 @@ import React from "react";
 import styles from "./Userpage.module.scss";
 import ReactFullpage from "@fullpage/react-fullpage";
 
-import * as d3 from "d3";
-
 import Heatmap from "../Visualizations/Heatmap";
 
 const axios = require("axios");
