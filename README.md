@@ -1,68 +1,59 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="center">Last.fm Stats</h1>
 
-## Available Scripts
+<div align="center">
+  <strong>Visualize all your Last.fm activity in a beautiful and interactive way.</strong>
+  <br/>
+  <a href="https://lastfmstats.herokuapp.com/">
+  <i>Try Yours </i>
+  </a>
+</div>
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Features](#features)
+- [Installation](#installation)
+- [License](#license)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Features
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+**bold features** are implemented, `em features` are a work in progress,
+_italic features_ are planned, but not yet in development.
 
-### `npm test`
+### Data Visualization
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **yearly heatmap:** that shows the most and least active days, over a yearly period.
+  Measured by the number of scrobbles.
+  It defaults to the period of _[1 year ago, today]_.
 
-### `npm run build`
+- `yearly time series:` that shows the number of scrobbles per week, over a yearly period.
+  For every week, it shows the song, artist, and album most listened to.
+  It defaults to the period of _[1 year ago, today]_.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- _yearly artist time series:_ that shows the number of scrobbles from a single artist
+  per week, over a yearly period.
+  For every week, it shows the most listened to song.
+  _Allow to switch the measurement method between scrobbles and listening time._
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+- _overall decades histogram:_ that shows the number of `[scrobbles, unique tracks]` for
+  songs **originally** released by decade.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- _language distribution (pie?):_ that shows the languages proportion for the `[scrobbles, unique tracks]`
+  in the library.
 
-### `npm run eject`
+- _explicit vs. non-explicit:_ that shows the percentage of `[scrobbles, unique tracks]` with
+  explicit content.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Playlist creation
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- _The `n` most listened to `[songs, artists, albums]` for every `[day, week, month, year]`,
+  over `[week, month, year, overal, custom]`._
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Installation
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```sh
+$ npm install choo
+```
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+[MIT](https://tldrlegal.com/license/mit-license)
