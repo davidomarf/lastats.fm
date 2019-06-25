@@ -8,6 +8,11 @@
   </a>
 </div>
 
+<p align="center">
+  <img src="./img/lastfm-screenshot.png" alt="LastfmStats screenshot displaying davidomarf yearly heatmap">
+</p>
+
+
 ## Table of Contents
 
 - [Features](#features)
