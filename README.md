@@ -56,8 +56,12 @@ _italic features_ are planned, but not yet in development.
 
 ## Tools
 
-This project is being built using [React](https://reactjs.org/), and [d3.js](https://d3js.org/)
-for the visualizations.
+This project is being built using [React](https://reactjs.org/). 
+
+To display page sections as a fullscreen element, we use
+[fullPage.js](https://github.com/alvarotrigo/fullpage.js/)
+
+For the visualizations, we use [d3.js](https://d3js.org/).
 
 ## Installation
 
