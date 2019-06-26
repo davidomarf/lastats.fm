@@ -9,6 +9,7 @@ function App() {
   return (
     <Router>
       <Switch>
+        {/* Handle URLs and display elements accordingly */}
         <Route path="/" exact component={Home} />
         <Route path="/user/:user" component={UserPage} />
         <Route component={NotFound} />

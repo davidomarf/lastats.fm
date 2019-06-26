@@ -16,10 +16,6 @@ async function getData(url, f) {
   }
 }
 
-async function getUserInfo(user) {
-  
-}
-
 function getScrobbles(user) {
   let pages = Math.ceil(user.playCount / 200);
   let url = `${lastFmCall}&method=user.getrecenttracks&limit=200&user=${

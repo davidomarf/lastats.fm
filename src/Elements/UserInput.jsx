@@ -3,6 +3,9 @@ import { withRouter } from "react-router-dom";
 
 import styles from "./UserInput.module.scss";
 
+/**
+ * Displays and handles the form to get the last.fm username
+ */
 class UserInput extends React.Component {
   constructor() {
     super();
@@ -19,6 +22,8 @@ class UserInput extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    // When submitted, redirect to /user/user, matching
+    // the Route that renders Userpage
     this.props.history.push("/user/" + this.state.user);
   }
 
