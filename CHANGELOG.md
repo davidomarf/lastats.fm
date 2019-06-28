@@ -17,6 +17,8 @@ the app functionality.
 - Create a form to ask for the username to fetch
 - Get a list of all the scrobbles from the user in `user/:user`
 - Display a Heatmap of the last year (Today but one year ago, today)
+### Fixed
+- Tooltip no longer goes offscreen but instead now flips to the left
 #### Meta
 - Create a basic GitHub repository
 - Add community files: templates, contributing, code of conduct.

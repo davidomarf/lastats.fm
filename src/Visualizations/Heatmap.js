@@ -19,16 +19,16 @@ var mouseover = function(d) {
 var mousemove = function(d) {
   let day = d3.select(this);
   tooltip_text
-    .attr("x", d3.mouse(this)[0] + 15)
-    .attr("y", d3.mouse(this)[1])
     .style("fill", "white")
+    .text(`${day.attr("scrobbles")} scrobbles on ${day.attr("date")}`)
     .attr("class", styles["meta-text"])
-    .text(`${day.attr("scrobbles")} scrobbles on ${day.attr("date")}`);
-  tooltip
-    .attr("x", d3.mouse(this)[0] + 10)
-    .attr("y", d3.mouse(this)[1] - 10)
+    .attr("x", d3.mouse(this)[0] + ((d3.mouse(this)[0] > 491) ? - (tooltip_text.node().getBBox().width  + 15): 15))
+    .attr("y", d3.mouse(this)[1]);
+    tooltip
     .attr("width", tooltip_text.node().getBBox().width + 10)
-    .attr("height", 15);
+    .attr("height", 15)
+    .attr("x", d3.mouse(this)[0] + ((d3.mouse(this)[0] > 491) ? - (tooltip_text.node().getBBox().width  + 20): 10))
+    .attr("y", d3.mouse(this)[1] - 10);
 };
 
 var mouseleave = function(d) {
