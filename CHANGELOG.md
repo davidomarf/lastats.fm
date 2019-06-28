@@ -13,6 +13,10 @@ the app functionality.
 - Draw Heatmap incrementally, updating every time UserPage fetches another page of scrobbles
 - The days in the Heatmap graph, have an id based on the date they display (previously)
   it was based on the days elapsed since the start of the displayed period.
+- Change the color palete of the Heatmap. 
+
+### Fixed
+- Tooltip no longer goes offscreen but instead now flips to the left
 
 ## [0.1.0] - 2019-06-26
 ### Added
@@ -21,8 +25,7 @@ the app functionality.
 - Create a form to ask for the username to fetch
 - Get a list of all the scrobbles from the user in `user/:user`
 - Display a Heatmap of the last year (Today but one year ago, today)
-### Fixed
-- Tooltip no longer goes offscreen but instead now flips to the left
+
 #### Meta
 - Create a basic GitHub repository
 - Add community files: templates, contributing, code of conduct.

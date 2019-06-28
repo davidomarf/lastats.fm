@@ -22,12 +22,24 @@ var mousemove = function(d) {
     .style("fill", "white")
     .text(`${day.attr("scrobbles")} scrobbles on ${day.attr("date")}`)
     .attr("class", styles["meta-text"])
-    .attr("x", d3.mouse(this)[0] + ((d3.mouse(this)[0] > 491) ? - (tooltip_text.node().getBBox().width  + 15): 15))
+    .attr(
+      "x",
+      d3.mouse(this)[0] +
+        (d3.mouse(this)[0] > 491
+          ? -(tooltip_text.node().getBBox().width + 15)
+          : 15)
+    )
     .attr("y", d3.mouse(this)[1]);
-    tooltip
+  tooltip
     .attr("width", tooltip_text.node().getBBox().width + 10)
     .attr("height", 15)
-    .attr("x", d3.mouse(this)[0] + ((d3.mouse(this)[0] > 491) ? - (tooltip_text.node().getBBox().width  + 20): 10))
+    .attr(
+      "x",
+      d3.mouse(this)[0] +
+        (d3.mouse(this)[0] > 491
+          ? -(tooltip_text.node().getBBox().width + 20)
+          : 10)
+    )
     .attr("y", d3.mouse(this)[1] - 10);
 };
 
@@ -89,9 +101,10 @@ function getIDFromDay(day) {
  * received in the interpolator.
  */
 const myColor = d3
-  .scaleSequential()
-  .interpolator(d3.interpolateYlOrRd)
-  .domain([0, 8]);
+  .scaleLinear()
+  .range(["#383C4A", "#e4fd3f"])
+  .domain([0, 4]);
+
 class Heatmap extends React.Component {
   constructor(props) {
     super(props);
@@ -99,7 +112,7 @@ class Heatmap extends React.Component {
     this.state = {};
     this.dayArray = [];
     this.maxValue = 0;
-    this.numberOfCategories = 8;
+    this.numberOfCategories = 4;
     this.endDate = { date: new Date() };
     this.endDate.utc = Math.ceil(this.endDate.date.getTime() / 1000);
     this.startDate = {
@@ -153,9 +166,9 @@ class Heatmap extends React.Component {
         .append("rect")
         .attr("x", 42 + i * 10)
         .attr("y", 82)
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("style", "fill:" + myColor(i));
+        .attr("width", 9)
+        .attr("height", 9)
+        .attr("style", `fill:${myColor(i)}; stroke:#4E5467`);
     }
   }
 
