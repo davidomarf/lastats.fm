@@ -36,35 +36,6 @@ var mouseleave = function(d) {
   tooltip_text.text("");
 };
 
-function dateToUTC(d) {
-  return (
-    Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 1000
-  );
-}
-
-function makeScrobblingFrequencyArray(scrobbles) {
-  let frequency = [
-    {
-      date: scrobbles[0],
-      count: 1
-    }
-  ];
-
-  for (let i = 1, frequency_i = 0; i < scrobbles.length; i++) {
-    if (frequency[frequency_i].date === scrobbles[i]) {
-      frequency[frequency_i].count++;
-    } else {
-      frequency.push({ date: scrobbles[i], count: 1 });
-      frequency_i++;
-    }
-  }
-  return frequency;
-}
-
-function daysBetweenDates(a, b) {
-  return Math.ceil((a - b) / 86400);
-}
-
 // Using it to render the months name without calling
 // Date.toLocaleDateString() if only the month is needed
 const months = [
@@ -107,7 +78,7 @@ function getDateArray(start, end) {
 }
 
 function getIDFromDay(day) {
-  return `day-${day}`;
+  return `hm-${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
 }
 
 /**
@@ -121,22 +92,22 @@ const myColor = d3
   .scaleSequential()
   .interpolator(d3.interpolateYlOrRd)
   .domain([0, 8]);
-
 class Heatmap extends React.Component {
   constructor(props) {
     super(props);
+    this.frequencyList = {};
     this.state = {};
     this.dayArray = [];
-    this.maxValue = 343;
+    this.maxValue = 0;
     this.numberOfCategories = 8;
     this.endDate = { date: new Date() };
-    this.endDate.utc = dateToUTC(this.endDate.date);
+    this.endDate.utc = Math.ceil(this.endDate.date.getTime() / 1000);
     this.startDate = {
       date: new Date(
         new Date().setFullYear(this.endDate.date.getFullYear() - 1)
       )
     };
-    this.startDate.utc = dateToUTC(this.startDate.date);
+    this.startDate.utc = Math.floor(this.startDate.date.getTime() / 1000);
   }
 
   /**
@@ -188,37 +159,18 @@ class Heatmap extends React.Component {
     }
   }
 
-  getScrobblesInPeriod(period) {
-    let totalScrobbles = this.props.user.scrobbles;
-    return totalScrobbles
-      .map(e => e.date.uts)
-      .filter(e => e > period[0] && e < period[1]);
-  }
-
-  draw(svg) {
-    let scrobblesInPeriod = this.getScrobblesInPeriod([
-      this.startDate.utc,
-      this.endDate.utc
-    ]);
-
-    scrobblesInPeriod = scrobblesInPeriod.map(e =>
-      daysBetweenDates(e, this.startDate.utc)
-    );
-    let scrobblingFrequency = makeScrobblingFrequencyArray(scrobblesInPeriod);
-
-    this.maxValue = d3.max(scrobblingFrequency, d => d.count);
-
-    for (let i = 0; i < scrobblingFrequency.length; i++) {
-      let id = "#" + getIDFromDay(scrobblingFrequency[i].date);
+  draw() {
+    let freqArray = d3.entries(this.frequencyList);
+    this.maxValue = d3.max(freqArray, d => d.value);
+    for (let i = 0; i < freqArray.length; i++) {
       let color = myColor(
         Math.ceil(
-          this.numberOfCategories *
-            (scrobblingFrequency[i].count / (0.9 * this.maxValue))
+          this.numberOfCategories * (freqArray[i].value / this.maxValue)
         )
       );
-      d3.select(id)
+      d3.select("#" + freqArray[i].key)
         .style("fill", color)
-        .attr("scrobbles", scrobblingFrequency[i].count);
+        .attr("scrobbles", freqArray[i].value);
     }
   }
 
@@ -249,7 +201,7 @@ class Heatmap extends React.Component {
         }
       }
 
-      let id = getIDFromDay(i);
+      let id = getIDFromDay(dates[i]);
       svg
         .append("rect")
         .attr("x", 20 + monthShift + weekShift * 10)
@@ -266,6 +218,33 @@ class Heatmap extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    let lastList = this.props.user.scrobbles;
+    if (lastList.length === 0) return;
+
+    lastList = lastList[lastList.length - 1];
+    if (
+      (lastList.start >= this.startDate.utc &&
+        lastList.start <= this.endDate.utc) ||
+      (lastList.end <= this.endDate.utc && lastList.end >= this.startDate.utc)
+    ) {
+      let idList = lastList.list.map(e =>
+        getIDFromDay(new Date(1000 * Number(e.date.uts)))
+      );
+
+      for (let i = 0; i < idList.length; i++) {
+        let id = idList[i];
+        if (this.frequencyList[id]) {
+          this.frequencyList[id]++;
+        } else {
+          this.frequencyList[id] = 1;
+        }
+      }
+
+      this.draw();
+    }
+  }
+
   componentDidMount() {
     const svg = d3
       .select(`#d3-section-${this.props.title}`)
@@ -273,12 +252,9 @@ class Heatmap extends React.Component {
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "-20 -20 640 120");
 
-    // create a tooltip
-
     this.drawLegend(svg);
     this.drawYearBase(svg);
     this.drawWeekDays(svg);
-    this.draw(svg);
     tooltip = svg.append("rect");
     tooltip_text = svg.append("text");
   }

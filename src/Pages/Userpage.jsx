@@ -47,11 +47,21 @@ class UserPage extends React.Component {
       lastfm
         .getScrobbles(this.state.user, i)
         // When resolved, update the state by concatenating the value of the promise
-        .then(v =>
-          this.setState({
-            scrobbles: this.state.scrobbles.concat(...returnRecentTracks(v))
-          })
-        );
+        .then(v => {
+          if (v) {
+            let list = returnRecentTracks(v);
+            this.setState({
+              scrobbles: this.state.scrobbles.concat({
+                page: i,
+                list: list,
+                start: Number(list[list.length - 1].date.uts),
+                end: Number(list[0].date.uts)
+              })
+            });
+          } else {
+            console.log(i);
+          }
+        });
     }
   }
 
