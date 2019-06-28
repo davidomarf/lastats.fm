@@ -5,32 +5,7 @@ import ReactFullpage from "@fullpage/react-fullpage";
 
 import Heatmap from "../Visualizations/Heatmap";
 
-// Include it to manage API requests without exceeding API call limit
-const axios = require("axios");
-
-// API base call. Append an API method. Know them at https://www.last.fm/api/intro
-const lastFmCall =
-  "https://ws.audioscrobbler.com/2.0/?format=json&api_key=" +
-  process.env.REACT_APP_LAST_FM_API;
-
-// TODO: Move this to ../API/lastfm.js
-/**
- * Fetch the data from one URL and apply (if provided) a function
- * to the data before returning it.
- *
- * @param {string} url URL to make the request
- * @param {function} [f] function to apply to the data before returning
- */
-const getData = async (url, f) => {
-  try {
-    const response = await axios.get(url);
-    let data = response.data;
-    if (f !== undefined) data = f(data);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+import lastfm from "../API/lastfm";
 
 /**
  * Whole page for the user rendered when route is /user/:user
@@ -41,60 +16,69 @@ class UserPage extends React.Component {
 
     this.state = {
       // Set user to the string after /user/ in the url
-      user: props.match.params.user
+      user: props.match.params.user,
+      playcount: 0,
+      scrobbles: []
     };
 
-    // Get the playcount of the user
-    fetch(lastFmCall + "&method=user.getinfo&user=" + this.state.user)
-      .then(res => res.json())
-      .then(data => {
-        this.setState({
-          playCount: data.user.playcount
-        });
-        // After setting the playCount for the user, get all the scrobblss
-        this.setScrobbles();
-      })
-      .catch(console.log);
+    // Get the actual playcount of the user
+    this.getPlaycount();
   }
 
   /**
-   *  Get all the scrobbles from the user
+   * Update the state of the component to contain the complete list of scrobbles
    */
-  setScrobbles() {
-    // Calculate the number of pages to fetch using playCount.
-    // Last.fm getrecenttracks has a maximum limit of 200.
+  getScrobbles() {
+    // Last.fm getrecenttracks has a limit of 200 items per page.
     // https://www.last.fm/api/show/user.getRecentTracks
-    let pages = Math.ceil(this.state.playCount / 200);
-    let url = `${lastFmCall}&method=user.getrecenttracks&limit=200&user=${
-      this.state.user
-    }&page=`;
+    let pages = Math.ceil(this.state.playcount / 200);
 
-    // Save all the promises from fetching the urls asynchronously
-    let scrobblesPromises = [];
-    // Array to contain the resolved promises
-    let scrobbles = [];
+    // Function to filter the value of the promise and return only what we'll be using
+    const returnRecentTracks = e => {
+      // If the user is currently scrobbling, delete that element
+      if (e.recenttracks.track[0]["@attr"]) {
+        e.recenttracks.track.shift();
+      }
+      return e.recenttracks.track;
+    };
 
     for (let i = 1; i <= pages; i++) {
-      // Function to send to getData.
-      // If the user is currently scrobbling, delete that element
-      const returnRecentTracks = e => {
-        // When a track is playing now, it has an .@attr property
-        if (e.recenttracks.track[0]["@attr"]) {
-          e.recenttracks.track.shift();
-        }
-        return e.recenttracks.track;
-      };
-      scrobblesPromises.push(getData(`${url}${i}`, returnRecentTracks));
+      // lastfm.getScrobbles() returns a Promise
+      lastfm
+        .getScrobbles(this.state.user, i)
+        // When resolved, update the state by concatenating the value of the promise
+        .then(v => {
+          if (v) {
+            let list = returnRecentTracks(v);
+            this.setState({
+              scrobbles: this.state.scrobbles.concat({
+                page: i,
+                list: list,
+                start: Number(list[list.length - 1].date.uts),
+                end: Number(list[0].date.uts)
+              })
+            });
+          } else {
+            console.log(i);
+          }
+        });
     }
+  }
 
-    // When all the promises are resolved, add the values from each call
-    // to the scrobbles array.
-    Promise.all(scrobblesPromises).then(values => {
-      scrobbles = scrobbles.concat(...values);
-      this.setState({
-        scrobbles: scrobbles
-      });
-    });
+  /**
+   * Update the state of the component to contain the number of scrobbles from the user
+   */
+  getPlaycount() {
+    // lastfm.getUserPlayCount() returns a Promise
+    lastfm
+      .getUserPlayCount(this.state.user)
+      // When resolved, set the state using the value of the promise, and send
+      // a callback to get the scrobbles
+      .then(v =>
+        this.setState({ playcount: Number(v.user.playcount) }, () =>
+          this.getScrobbles()
+        )
+      );
   }
 
   render() {

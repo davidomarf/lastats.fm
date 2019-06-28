@@ -9,6 +9,10 @@ modifying templates, will be under the heading *Meta*. These changes don't affec
 the app functionality.
 
 ## [Unreleased]
+### Changed
+- Draw Heatmap incrementally, updating every time UserPage fetches another page of scrobbles
+- The days in the Heatmap graph, have an id based on the date they display (previously)
+  it was based on the days elapsed since the start of the displayed period.
 
 ## [0.1.0] - 2019-06-26
 ### Added
