@@ -10,6 +10,10 @@ the app functionality.
 
 ## [Unreleased]
 
+## [0.1.2] - 2019-06-29
+### Fixed
+- Specify node version in package.json to fix Heroku deployment
+
 ## [0.1.1] - 2019-06-29
 ### Changed
 - Draw Heatmap incrementally, updating every time UserPage fetches another page of
@@ -35,6 +39,7 @@ based on the days elapsed since the start of the displayed period.
 - Add community files: templates, contributing, code of conduct.
 - Write a useful Readme
 
-[Unreleased]: https://github.com/davidomarf/lastfm/compare/v0.1.0..HEAD
-[0.1.1]: https://github.com/davidomarf/lastfm/compare/v0.1.1..HEAD
+[Unreleased]: https://github.com/davidomarf/lastfm/compare/v0.1.2..HEAD
+[0.1.2]: https://github.com/davidomarf/lastfm/compare/tag/v0.1.2
+[0.1.1]: https://github.com/davidomarf/lastfm/compare/tag/v0.1.1
 [0.1.0]: https://github.com/davidomarf/lastfm/releases/tag/v0.1.0
