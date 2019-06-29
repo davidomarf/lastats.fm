@@ -5,7 +5,7 @@ import ReactFullpage from "@fullpage/react-fullpage";
 
 import Heatmap from "../Visualizations/Heatmap";
 
-import lastfm from "../API/lastfm";
+const lastfm = require("../API/lastfm");
 
 /**
  * Whole page for the user rendered when route is /user/:user
