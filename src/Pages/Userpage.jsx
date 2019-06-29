@@ -4,6 +4,7 @@ import styles from "./Userpage.module.scss";
 import ReactFullpage from "@fullpage/react-fullpage";
 
 import Heatmap from "../Visualizations/Heatmap";
+import TimeSeries from "../Visualizations/TimeSeries";
 
 import lastfm from "../API/lastfm";
 
@@ -88,11 +89,22 @@ class UserPage extends React.Component {
         render={({ state, fullpageApi }) => {
           return (
             <div id="fullpage-wrapper">
+              {/* Heatmap Graph */}
               <div className="section">
                 <div className={styles["section-container"]}>
                   {/* Mount Heatmap only when the scrobbles are set */}
                   {this.state.scrobbles && (
                     <Heatmap title="Heatmap" user={this.state} />
+                  )}
+                </div>
+              </div>
+
+              {/* Time SeriesGraph */}
+              <div className="section">
+                <div className={styles["section-container"]}>
+                  {/* Mount Heatmap only when the scrobbles are set */}
+                  {this.state.scrobbles && (
+                    <TimeSeries title="Timeseries" user={this.state} />
                   )}
                 </div>
               </div>
