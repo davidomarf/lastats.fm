@@ -9,6 +9,8 @@ modifying templates, will be under the heading *Meta*. These changes don't affec
 the app functionality.
 
 ## [Unreleased]
+
+## [0.1.1] - 2019-06-29
 ### Changed
 - Draw Heatmap incrementally, updating every time UserPage fetches another page of scrobbles
 - The days in the Heatmap graph, have an id based on the date they display (previously)
@@ -32,4 +34,5 @@ the app functionality.
 - Write a useful Readme
 
 [Unreleased]: https://github.com/davidomarf/lastfm/compare/v0.1.0..HEAD
+[0.1.1]: https://github.com/davidomarf/lastfm/compare/v0.1.1..HEAD
 [0.1.0]: https://github.com/davidomarf/lastfm/releases/tag/v0.1.0
