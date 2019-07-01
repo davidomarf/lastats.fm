@@ -11,13 +11,13 @@
  */
 
 import React from "react";
-import styles from "./Heatmap.module.scss";
+import styles from "./TimeSeries.module.scss";
 import * as d3 from "d3";
 
 const lineFunction = d3
   .line()
   .x(d => d3.select("#" + d.key).attr("cx"))
-  .y(d => d3.select("#" + d.key).attr("cy"))
+  .y(d => d3.select("#" + d.key).attr("curve-y"))
   .curve(d3.curveMonotoneX);
 
 /* -------------------------- Component Definition -------------------------- */
@@ -65,18 +65,9 @@ class TimeSeries extends React.Component {
     this.mostScrobblesInAWeek = d3.max(freqArray, d => d.value);
 
     for (let i = 0; i < freqArray.length; i++) {
-      // The number sent to myColor is an integer between 0 and
-      // this.numberOfColorTags. It is calculated by multiplying the ratio of
-      // dayValue / maxValue by the number of available color tags.
-      let color = myColor(
-        Math.ceil(
-          this.numberOfColorTags *
-            (freqArray[i].value / this.mostScrobblesInAWeek)
-        )
-      );
       d3.select("#" + freqArray[i].key)
-        .attr("cy", -(freqArray[i].value / this.mostScrobblesInAWeek) * 100)
-        .style("fill", color)
+        .attr("curve-y", -(freqArray[i].value / this.mostScrobblesInAWeek) * 60)
+        .attr("cy", -(freqArray[i].value / this.mostScrobblesInAWeek) * 60)
         .attr("scrobbles", freqArray[i].value);
       d3.select("#ts-curve").attr("d", lineFunction(freqArray));
     }
@@ -85,39 +76,26 @@ class TimeSeries extends React.Component {
   drawHeatmapCells(svg) {
     // Create an array of dates for the year
     let dates = getDateArray(this.startDate.date, this.endDate.date);
-    let style = styles["day"];
-    svg
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", 530)
-      .attr("height", 1)
-      .attr("fill", "#C0C4D4")
-      ;
+    let style = styles["week-circle"];
 
     svg
       .append("path")
       .attr("id", "ts-curve")
       .attr("d", lineFunction(d3.entries(this.frequencyList)))
-      .attr("stroke", "#4E5467")
-      .attr("stroke-width", .5)
+      .attr("stroke", "#4e5467")
+      .attr("stroke-width", 0.5)
       .attr("fill", "none");
-
+    let monthShift = 20;
     for (let i = 0; i < dates.length; i++) {
       let id = getIDFromDate(dates[i]);
       this.frequencyList[id] = 0;
       if (dates[i].getDate() <= 7) {
-        svg
-          .append("text")
-          .attr("x", i * 10)
-          .attr("y", 15 + 4)
-          .text(months[dates[i].getMonth()])
-          .attr("class", styles["meta-text"] + " " + styles["month-flag"]);
+        monthShift += 5;
       }
-
       svg
         .append("circle")
-        .attr("cx", i * 10)
+        .attr("cx", monthShift + i * 10 + 2)
+        .attr("curve-y", 0)
         .attr("cy", 0)
         .attr("r", 1)
         .attr("class", style)
@@ -169,6 +147,8 @@ class TimeSeries extends React.Component {
         )
         .filter(e => this.frequencyList[e] !== undefined);
 
+      console.log(idList);
+
       // This counts the number of times that a given id appears in the
       // current list of ids
       for (let i = 0; i < idList.length; i++) {
@@ -199,7 +179,8 @@ class TimeSeries extends React.Component {
       // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
       // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
       .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "-20 -250 560 270");
+      .attr("viewBox", "-20 -119 640 120");
+    // .attr("viewBox", "-20 -250 560 270");
 
     // // Draw the Heatmap structure: Legend, texts, and cells
     // this.drawLegend(svg);
@@ -303,7 +284,7 @@ const myColor = d3
 /* --------------------------- D3 Tooltip Elements -------------------------- */
 
 // Tooltip and Tooltip text are global variables that are used to display the
-// number of scrobbles and date of each day in the Heatmap.
+// number of scrobbles and date of eaach day in the Heatmap.
 let tooltip;
 let tooltip_text;
 
