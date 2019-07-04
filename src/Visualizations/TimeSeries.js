@@ -67,9 +67,14 @@ class TimeSeries extends React.Component {
     for (let i = 0; i < freqArray.length; i++) {
       d3.select("#" + freqArray[i].key)
         .attr("curve-y", -(freqArray[i].value / this.mostScrobblesInAWeek) * 60)
+        .transition()
+        .duration(2000)
         .attr("cy", -(freqArray[i].value / this.mostScrobblesInAWeek) * 60)
         .attr("scrobbles", freqArray[i].value);
-      d3.select("#ts-curve").attr("d", lineFunction(freqArray));
+      d3.select("#ts-curve")
+        .transition()
+        .duration(2000)
+        .attr("d", lineFunction(freqArray));
     }
   }
 
