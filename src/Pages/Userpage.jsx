@@ -91,7 +91,9 @@ class UserPage extends React.Component {
             <div id="fullpage-wrapper">
               {/* Heatmap Graph */}
               <div className="section">
+                <center><h2>Hey, <u>{this.state.user}</u>, this is how you've been listening to music!</h2></center>
                 <div className={styles["section-container"]}>
+            
                   {/* Mount Heatmap only when the scrobbles are set */}
                   {this.state.scrobbles && (
                     <Heatmap title="Heatmap" user={this.state} />
