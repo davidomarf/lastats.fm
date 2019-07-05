@@ -1,5 +1,6 @@
 .day {
   fill: lighten(#383c4a, 10);
+  stroke-width: 0;
   &:hover {
     stroke-width: 2;
   }
