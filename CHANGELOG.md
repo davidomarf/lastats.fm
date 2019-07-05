@@ -9,11 +9,15 @@ modifying templates, will be under the heading *Meta*. These changes don't affec
 the app functionality.
 
 ## [Unreleased]
+
+## [0.1.1] - 2019-06-29
 ### Changed
-- Draw Heatmap incrementally, updating every time UserPage fetches another page of scrobbles
-- The days in the Heatmap graph, have an id based on the date they display (previously)
-  it was based on the days elapsed since the start of the displayed period.
+- Draw Heatmap incrementally, updating every time UserPage fetches another page of
+scrobbles
+- The Heatmap cells have an id based on the date they display. Previously, it was
+based on the days elapsed since the start of the displayed period.
 - Change the color palete of the Heatmap. 
+- Reduce the number of color tags from 8 to 4.
 
 ### Fixed
 - Tooltip no longer goes offscreen but instead now flips to the left
@@ -32,4 +36,5 @@ the app functionality.
 - Write a useful Readme
 
 [Unreleased]: https://github.com/davidomarf/lastfm/compare/v0.1.0..HEAD
+[0.1.1]: https://github.com/davidomarf/lastfm/compare/v0.1.1..HEAD
 [0.1.0]: https://github.com/davidomarf/lastfm/releases/tag/v0.1.0
