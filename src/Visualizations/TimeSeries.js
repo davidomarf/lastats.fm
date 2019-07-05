@@ -262,18 +262,6 @@ function getIDFromDate(date) {
   return `ts-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
-/**
- * Function to interpolate colors using a given d3 color palette.
- *
- * The domain is the range of the expected values to be received in the
- * interpolator. For this use case, domain[1] must match
- * Heatmap.numberofCategories.
- */
-const myColor = d3
-  .scaleLinear()
-  .range(["#383C4A", "#e4fd3f"])
-  .domain([0, 4]);
-
 /* --------------------------- D3 Tooltip Elements -------------------------- */
 
 // Tooltip and Tooltip text are global variables that are used to display the
