@@ -16,8 +16,8 @@ import * as d3 from "d3";
 
 const lineFunction = d3
   .line()
-  .x(d => d3.select("#" + d.key).attr("cx"))
-  .y(d => d3.select("#" + d.key).attr("curve-y"))
+  .x((d) => d3.select("#" + d.key).attr("cx"))
+  .y((d) => d3.select("#" + d.key).attr("curve-y"))
   .curve(d3.curveMonotoneX);
 
 /* -------------------------- Component Definition -------------------------- */
@@ -62,7 +62,7 @@ class TimeSeries extends React.Component {
     this.numberOfColorTags = 4;
 
     // Update using the maximum value in freqArray
-    this.mostScrobblesInAWeek = d3.max(freqArray, d => d.value);
+    this.mostScrobblesInAWeek = d3.max(freqArray, (d) => d.value);
 
     for (let i = 0; i < freqArray.length; i++) {
       d3.select("#" + freqArray[i].key)
@@ -157,9 +157,9 @@ class TimeSeries extends React.Component {
     // date to determine an ID
     let idList = [].concat.apply(
       [],
-      lastList.map(e =>
+      lastList.map((e) =>
         e.list
-          .map(e =>
+          .map((e) =>
             getIDFromDate(
               new Date(
                 1000 * Math.ceil(Number(e.date.uts) / 604800) * 604800 -
@@ -167,7 +167,7 @@ class TimeSeries extends React.Component {
               )
             )
           )
-          .filter(e => this.frequencyList[e] !== undefined)
+          .filter((e) => this.frequencyList[e] !== undefined)
       )
     );
 

@@ -87,10 +87,10 @@ class Heatmap extends React.Component {
       .data(text)
       .enter()
       .append("text")
-      .attr("x", d => d[0])
-      .attr("y", d => d[1])
+      .attr("x", (d) => d[0])
+      .attr("y", (d) => d[1])
       .attr("class", styles["meta-text"])
-      .text(d => d[2]);
+      .text((d) => d[2]);
 
     for (let i = 0; i <= this.numberOfColorTags; i++) {
       svg
@@ -115,7 +115,7 @@ class Heatmap extends React.Component {
     let freqArray = d3.entries(this.frequencyList);
 
     // Update using the maximum value in freqArray
-    this.mostScrobblesInADay = d3.max(freqArray, d => d.value);
+    this.mostScrobblesInADay = d3.max(freqArray, (d) => d.value);
 
     for (let i = 0; i < freqArray.length; i++) {
       // The number sent to myColor is an integer between 0 and
@@ -257,8 +257,8 @@ class Heatmap extends React.Component {
     // date to determine an ID
     let idList = [].concat.apply(
       [],
-      lastList.map(e =>
-        e.list.map(e => getIDFromDay(new Date(1000 * Number(e.date.uts))))
+      lastList.map((e) =>
+        e.list.map((e) => getIDFromDay(new Date(1000 * Number(e.date.uts))))
       )
     );
 

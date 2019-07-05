@@ -44,7 +44,7 @@ class UserPage extends React.Component {
    */
   getScrobbles() {
     // Function to filter the value of the promise and return only what we'll be using
-    const returnRecentTracks = e => {
+    const returnRecentTracks = (e) => {
       // If the user is currently scrobbling, delete that element
       if (e.recenttracks.track[0]["@attr"]) {
         e.recenttracks.track.shift();
@@ -57,7 +57,7 @@ class UserPage extends React.Component {
       lastfm
         .getScrobbles(this.state.user, i)
         // When resolved, update the state by concatenating the value of the promise
-        .then(v => {
+        .then((v) => {
           if (v) {
             let list = returnRecentTracks(v);
             let start = Number(list[list.length - 1].date.uts);
@@ -65,9 +65,9 @@ class UserPage extends React.Component {
             this.setState({
               scrobbles: this.state.scrobbles.concat({
                 page: i,
-                list: list,
-                start: start,
-                end: end
+                list,
+                start,
+                end
               })
             });
           } else {
@@ -86,7 +86,7 @@ class UserPage extends React.Component {
       .getUserPlayCount(this.state.user)
       // When resolved, set the state using the value of the promise, and send
       // a callback to get the scrobbles
-      .then(v =>
+      .then((v) =>
         this.setState(
           {
             playcount: Number(v.user.playcount),
@@ -106,10 +106,13 @@ class UserPage extends React.Component {
             <div id="fullpage-wrapper">
               {/* Heatmap Graph */}
               <div className="section">
-                
-                <center><h2>Hey, <u>{this.state.user}</u>, this is how you've been listening to music!</h2></center>
+                <center>
+                  <h2>
+                    Hey, <u>{this.state.user}</u>, this is how you've been
+                    listening to music!
+                  </h2>
+                </center>
                 <div className={styles["section-container"]}>
-            
                   {/* Mount Heatmap only when the scrobbles are set */}
                   {this.state.scrobbles.length < this.state.pages && (
                     <Loading
