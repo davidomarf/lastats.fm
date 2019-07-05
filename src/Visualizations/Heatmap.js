@@ -138,12 +138,18 @@ class Heatmap extends React.Component {
       );
 
       d3.select("#" + freqArray[i].key)
-      .transition()
-      .duration(2000)
-        .attr("r", 1.5 + this.numberOfCategories * .5 *  (freqArray[i].value / this.maxValue))
+        .attr("scrobbles", freqArray[i].value)
+        .transition()
+        .duration(2000)
+        .attr(
+          "r",
+          1.5 +
+            this.numberOfColorTags *
+              0.5 *
+              (freqArray[i].value / this.mostScrobblesInADay)
+        )
         .style("fill", color)
-        .style("stroke", color)
-        .attr("scrobbles", freqArray[i].value);
+        .style("stroke", color);
     }
   }
 
@@ -195,7 +201,6 @@ class Heatmap extends React.Component {
           writeMonthNameNextSunday = false;
         }
         weekShift++;
-
       }
 
       /* ---------------------- Append a heatmap cell --------------------- */
