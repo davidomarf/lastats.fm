@@ -134,8 +134,8 @@ class Heatmap extends React.Component {
    */
   drawLegend(svg) {
     let text = [
-      [20, 90, "Less"],
-      [45 + (this.numberOfCategories + 1) * 10, 90, "More"]
+      [20, 100, "Less"],
+      [45 + (this.numberOfCategories + 1) * 10, 100, "More"]
     ];
 
     svg
@@ -152,10 +152,10 @@ class Heatmap extends React.Component {
       svg
         .append("rect")
         .attr("x", 42 + i * 10)
-        .attr("y", 82)
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("style", "fill:" + myColor(i));
+        .attr("y", 92)
+        .attr("width", 9)
+        .attr("height", 9)
+        .attr("style", `fill:${myColor(i)}; stroke:#4E5467`);
     }
   }
 
@@ -168,8 +168,13 @@ class Heatmap extends React.Component {
           this.numberOfCategories * (freqArray[i].value / this.maxValue)
         )
       );
+
       d3.select("#" + freqArray[i].key)
+      .transition()
+      .duration(2000)
+        .attr("r", 1.5 + this.numberOfCategories * .5 *  (freqArray[i].value / this.maxValue))
         .style("fill", color)
+        .style("stroke", color)
         .attr("scrobbles", freqArray[i].value);
     }
   }
@@ -188,26 +193,27 @@ class Heatmap extends React.Component {
         monthShift += 5;
       }
       if (weekDay === 0) {
-        weekShift++;
         if (drawMonthNextSunday) {
           svg
             .append("text")
             .attr("x", 20 + monthShift + weekShift * 10)
-            .attr("y", -5)
+            .attr("y", 80)
             .text(months[dates[i].getMonth()])
             .attr("class", styles["meta-text"] + " " + styles["month-flag"]);
 
           drawMonthNextSunday = false;
         }
+        weekShift++;
+
       }
 
       let id = getIDFromDay(dates[i]);
       svg
-        .append("rect")
-        .attr("x", 20 + monthShift + weekShift * 10)
-        .attr("y", weekDay * 10)
-        .attr("width", 8)
-        .attr("height", 8)
+        .append("circle")
+        .attr("cx", 22 + monthShift + weekShift * 10)
+        .attr("cy", 2 + weekDay * 10)
+        .attr("r", 1)
+        // .attr("height", 8)
         .attr("id", id)
         .attr("class", style)
         .attr("date", formatDate(dates[i]))
@@ -250,7 +256,7 @@ class Heatmap extends React.Component {
       .select(`#d3-section-${this.props.title}`)
       .append("svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "-20 -20 640 120");
+      .attr("viewBox", "-20 -5 640 120");
 
     this.drawLegend(svg);
     this.drawYearBase(svg);
@@ -262,9 +268,6 @@ class Heatmap extends React.Component {
   render() {
     return (
       <>
-        <h2>
-          Hey, {this.props.user.user}, this is how you listen to your music!
-        </h2>
         <div
           id={`d3-section-${this.props.title}`}
           className={styles["graph-container"]}
