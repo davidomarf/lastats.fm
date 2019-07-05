@@ -65,12 +65,12 @@ class TimeSeries extends React.Component {
     this.mostScrobblesInAWeek = d3.max(freqArray, (d) => d.value);
 
     for (let i = 0; i < freqArray.length; i++) {
-      d3.select("#" + freqArray[i].key)
-        .attr("curve-y", -(freqArray[i].value / this.mostScrobblesInAWeek) * 60)
+      d3.select("#" + freqArray[`${i}`].key)
+        .attr("curve-y", -(freqArray[`${i}`].value / this.mostScrobblesInAWeek) * 60)
         .transition()
         .duration(2000)
-        .attr("cy", -(freqArray[i].value / this.mostScrobblesInAWeek) * 60)
-        .attr("scrobbles", freqArray[i].value);
+        .attr("cy", -(freqArray[`${i}`].value / this.mostScrobblesInAWeek) * 60)
+        .attr("scrobbles", freqArray[`${i}`].value);
       d3.select("#ts-curve")
         .transition()
         .duration(2000)
@@ -92,9 +92,9 @@ class TimeSeries extends React.Component {
       .attr("fill", "none");
     let monthShift = 20;
     for (let i = 0; i < dates.length; i++) {
-      let id = getIDFromDate(dates[i]);
-      this.frequencyList[id] = 0;
-      if (dates[i].getDate() <= 7) {
+      let id = getIDFromDate(dates[`${i}`]);
+      this.frequencyList[`${id}`] = 0;
+      if (dates[`${i}`].getDate() <= 7) {
         monthShift += 5;
       }
       svg
@@ -107,7 +107,7 @@ class TimeSeries extends React.Component {
         .attr("id", id)
         // The attributes 'date' and 'scrobbles' are used to get the content
         // of the tooltip when hovering on a cell
-        .attr("date", formatDate(dates[i]))
+        .attr("date", formatDate(dates[`${i}`]))
         .attr("scrobbles", 0)
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
@@ -167,17 +167,17 @@ class TimeSeries extends React.Component {
               )
             )
           )
-          .filter((e) => this.frequencyList[e] !== undefined)
+          .filter((e) => this.frequencyList[`${e}`] !== undefined)
       )
     );
 
     // This counts the number of times that a given id appears in the
     // current list of ids
     for (let i = 0; i < idList.length; i++) {
-      let id = idList[i];
+      let id = idList[`${i}`];
       // If this.frequencyList.id is defined, increment its value
-      if (this.frequencyList[id] !== undefined) {
-        this.frequencyList[id]++;
+      if (this.frequencyList[`${id}`] !== undefined) {
+        this.frequencyList[`${id}`]++;
       }
     }
 
