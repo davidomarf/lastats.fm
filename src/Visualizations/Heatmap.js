@@ -78,13 +78,8 @@ class Heatmap extends React.Component {
    */
   drawLegend(svg) {
     let text = [
-<<<<<<< HEAD
-      [20, 90, "Less"],
-      [45 + (this.numberOfColorTags + 1) * 10, 90, "More"]
-=======
       [20, 100, "Less"],
-      [45 + (this.numberOfCategories + 1) * 10, 100, "More"]
->>>>>>> Update the style
+      [45 + (this.numberOfColorTags + 1) * 10, 100, "More"]
     ];
 
     svg
@@ -101,11 +96,7 @@ class Heatmap extends React.Component {
       svg
         .append("rect")
         .attr("x", 42 + i * 10)
-<<<<<<< HEAD
-        .attr("y", 82)
-=======
         .attr("y", 92)
->>>>>>> Update the style
         .attr("width", 9)
         .attr("height", 9)
         .attr("style", `fill:${myColor(i)}; stroke:#4E5467`);
