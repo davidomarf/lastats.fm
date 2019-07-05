@@ -59,13 +59,14 @@ class Heatmap extends React.Component {
    */
   drawWeekDays(svg) {
     let days = ["Mon", "Wed", "Fri"];
-    for (let i = 0; i < days.length; i++)
+    for (let i = 0; i < days.length; i++) {
       svg
         .append("text")
         .attr("x", 10)
         .attr("y", (i + 1) * 20 - 4.25)
         .attr("class", styles["meta-text"] + " " + styles["day-flag"])
-        .text(days[i]);
+        .text(days[`${i}`]);
+    }
   }
 
   /**
@@ -124,12 +125,12 @@ class Heatmap extends React.Component {
       let color = myColor(
         Math.ceil(
           this.numberOfColorTags *
-            (freqArray[i].value / this.mostScrobblesInADay)
+            (freqArray[`${i}`].value / this.mostScrobblesInADay)
         )
       );
 
-      d3.select("#" + freqArray[i].key)
-        .attr("scrobbles", freqArray[i].value)
+      d3.select("#" + freqArray[`${i}`].key)
+        .attr("scrobbles", freqArray[`${i}`].value)
         .transition()
         .duration(2000)
         .attr(
@@ -137,7 +138,7 @@ class Heatmap extends React.Component {
           1.5 +
             this.numberOfColorTags *
               0.5 *
-              (freqArray[i].value / this.mostScrobblesInADay)
+              (freqArray[`${i}`].value / this.mostScrobblesInADay)
         )
         .style("fill", color)
         .style("stroke", color);
@@ -162,8 +163,8 @@ class Heatmap extends React.Component {
 
       // .getDay() returns the day of the week (between 0, 6)
       // .getDate() returns the day of the month
-      let weekDay = dates[i].getDay();
-      let monthDay = dates[i].getDate();
+      let weekDay = dates[`${i}`].getDay();
+      let monthDay = dates[`${i}`].getDate();
 
       // This makes the script write the name of the month on the second week
       // of the month
@@ -185,7 +186,7 @@ class Heatmap extends React.Component {
             .append("text")
             .attr("x", 20 + monthShift + weekShift * 10)
             .attr("y", 80)
-            .text(months[dates[i].getMonth()])
+            .text(months[dates[`${i}`].getMonth()])
             .attr("class", styles["meta-text"] + " " + styles["month-flag"]);
 
           // Avoid drawing the month more than once
@@ -196,7 +197,7 @@ class Heatmap extends React.Component {
       /* ---------------------- Append a heatmap cell --------------------- */
 
       // Get the ID for the cell using the date
-      let id = getIDFromDay(dates[i]);
+      let id = getIDFromDay(dates[`${i}`]);
 
       svg
         .append("circle")
@@ -208,7 +209,7 @@ class Heatmap extends React.Component {
         .attr("class", style)
         // The attributes 'date' and 'scrobbles' are used to get the content
         // of the tooltip when hovering on a cell
-        .attr("date", formatDate(dates[i]))
+        .attr("date", formatDate(dates[`${i}`]))
         .attr("scrobbles", 0)
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
@@ -265,14 +266,14 @@ class Heatmap extends React.Component {
     // This counts the number of times that a given id appears in the
     // current list of ids
     for (let i = 0; i < idList.length; i++) {
-      let id = idList[i];
+      let id = idList[`${i}`];
       // If this.frequencyList.id is defined, increment its value
-      if (this.frequencyList[id]) {
-        this.frequencyList[id]++;
+      if (this.frequencyList[`${id}`]) {
+        this.frequencyList[`${id}`]++;
       }
       // If not, it means it's the first time that id appears, so initialize it
       else {
-        this.frequencyList[id] = 1;
+        this.frequencyList[`${id}`] = 1;
       }
     }
 
