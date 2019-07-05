@@ -5,6 +5,7 @@ import ReactFullpage from "@fullpage/react-fullpage";
 
 import Heatmap from "../Visualizations/Heatmap";
 import TimeSeries from "../Visualizations/TimeSeries";
+import Loading from "../Elements/Loading";
 
 const lastfm = require("../API/lastfm");
 
@@ -19,6 +20,7 @@ class UserPage extends React.Component {
       // Set user to the string after /user/ in the url
       user: props.match.params.user,
       playcount: 0,
+      pages: 1,
       scrobbles: []
     };
 
@@ -30,10 +32,6 @@ class UserPage extends React.Component {
    * Update the state of the component to contain the complete list of scrobbles
    */
   getScrobbles() {
-    // Last.fm getrecenttracks has a limit of 200 items per page.
-    // https://www.last.fm/api/show/user.getRecentTracks
-    let pages = Math.ceil(this.state.playcount / 200);
-
     // Function to filter the value of the promise and return only what we'll be using
     const returnRecentTracks = e => {
       // If the user is currently scrobbling, delete that element
@@ -43,7 +41,7 @@ class UserPage extends React.Component {
       return e.recenttracks.track;
     };
 
-    for (let i = 1; i <= pages; i++) {
+    for (let i = 1; i <= this.state.pages; i++) {
       // lastfm.getScrobbles() returns a Promise
       lastfm
         .getScrobbles(this.state.user, i)
@@ -76,8 +74,12 @@ class UserPage extends React.Component {
       // When resolved, set the state using the value of the promise, and send
       // a callback to get the scrobbles
       .then(v =>
-        this.setState({ playcount: Number(v.user.playcount) }, () =>
-          this.getScrobbles()
+        this.setState(
+          {
+            playcount: Number(v.user.playcount),
+            pages: Math.ceil(Number(v.user.playcount) / 200)
+          },
+          () => this.getScrobbles()
         )
       );
   }
@@ -95,7 +97,10 @@ class UserPage extends React.Component {
                 <div className={styles["section-container"]}>
             
                   {/* Mount Heatmap only when the scrobbles are set */}
-                  {this.state.scrobbles && (
+                  {this.state.scrobbles.length < this.state.pages && (
+                    <Loading pages={this.state.scrobbles.length} total={this.state.pages} />
+                  )}
+                  {this.state.scrobbles.length >= this.state.pages && (
                     <Heatmap title="Heatmap" user={this.state} />
                   )}
                 </div>
