@@ -127,9 +127,20 @@ class Heatmap extends React.Component {
             (freqArray[i].value / this.mostScrobblesInADay)
         )
       );
+
       d3.select("#" + freqArray[i].key)
+        .attr("scrobbles", freqArray[i].value)
+        .transition()
+        .duration(2000)
+        .attr(
+          "r",
+          1.5 +
+            this.numberOfColorTags *
+              0.5 *
+              (freqArray[i].value / this.mostScrobblesInADay)
+        )
         .style("fill", color)
-        .attr("scrobbles", freqArray[i].value);
+        .style("stroke", color);
     }
   }
 
@@ -173,13 +184,14 @@ class Heatmap extends React.Component {
           svg
             .append("text")
             .attr("x", 20 + monthShift + weekShift * 10)
-            .attr("y", -5)
+            .attr("y", 80)
             .text(months[dates[i].getMonth()])
             .attr("class", styles["meta-text"] + " " + styles["month-flag"]);
 
           // Avoid drawing the month more than once
           writeMonthNameNextSunday = false;
         }
+        weekShift++;
       }
 
       /* ---------------------- Append a heatmap cell --------------------- */
@@ -188,11 +200,11 @@ class Heatmap extends React.Component {
       let id = getIDFromDay(dates[i]);
 
       svg
-        .append("rect")
-        .attr("x", 20 + monthShift + weekShift * 10)
-        .attr("y", weekDay * 10)
-        .attr("width", 8)
-        .attr("height", 8)
+        .append("circle")
+        .attr("cx", 22 + monthShift + weekShift * 10)
+        .attr("cy", 2 + weekDay * 10)
+        .attr("r", 1)
+        // .attr("height", 8)
         .attr("id", id)
         .attr("class", style)
         // The attributes 'date' and 'scrobbles' are used to get the content
@@ -270,7 +282,7 @@ class Heatmap extends React.Component {
       // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
       // @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
       .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "-20 -20 640 120");
+      .attr("viewBox", "-20 -5 640 120");
 
     // Draw the Heatmap structure: Legend, texts, and cells
     this.drawLegend(svg);
@@ -285,9 +297,6 @@ class Heatmap extends React.Component {
   render() {
     return (
       <>
-        <h2>
-          Hey, {this.props.user.user}, this is how you listen to your music!
-        </h2>
         <div
           id={`d3-section-${this.props.title}`}
           className={styles["graph-container"]}
