@@ -23,6 +23,17 @@ class UserPage extends React.Component {
       scrobbles: []
     };
 
+    this.endDate = { date: new Date() };
+    this.endDate.utc = Math.ceil(this.endDate.date.getTime() / 1000);
+
+    // Same day as endDate, but one year ago
+    this.startDate = {
+      date: new Date(
+        new Date().setFullYear(this.endDate.date.getFullYear() - 1)
+      )
+    };
+    this.startDate.utc = Math.floor(this.startDate.date.getTime() / 1000);
+
     // Get the actual playcount of the user
     this.getPlaycount();
   }
@@ -48,12 +59,14 @@ class UserPage extends React.Component {
         .then(v => {
           if (v) {
             let list = returnRecentTracks(v);
+            let start = Number(list[list.length - 1].date.uts);
+            let end = Number(list[0].date.uts);
             this.setState({
               scrobbles: this.state.scrobbles.concat({
                 page: i,
                 list: list,
-                start: Number(list[list.length - 1].date.uts),
-                end: Number(list[0].date.uts)
+                start: start,
+                end: end
               })
             });
           } else {
@@ -94,7 +107,10 @@ class UserPage extends React.Component {
                 <div className={styles["section-container"]}>
                   {/* Mount Heatmap only when the scrobbles are set */}
                   {this.state.scrobbles.length < this.state.pages && (
-                    <Loading pages={this.state.scrobbles.length} total={this.state.pages} />
+                    <Loading
+                      pages={this.state.scrobbles.length}
+                      total={this.state.pages}
+                    />
                   )}
                   {this.state.scrobbles.length >= this.state.pages && (
                     <Heatmap title="Heatmap" user={this.state} />
