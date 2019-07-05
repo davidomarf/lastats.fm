@@ -1,0 +1,31 @@
+.day {
+  fill: lighten(#383c4a, 10);
+
+  &:hover {
+    stroke: #7c818c;
+  }
+}
+
+.meta-text {
+  &.day-flag {
+    text-align: right;
+    text-anchor: end;
+    fill: lighten(#282c3a, 60);
+  }
+  fill: lighten(#282c3a, 60);
+  font-size: 8.5px;
+  vertical-align: top;
+  &.month-flag {
+    text-align: left;
+    text-anchor: start;
+  }
+}
+
+.week-circle {
+  &:hover {
+    r: 2;
+  }
+  fill: #383c4a;
+  stroke: #e4fd3f;
+  stroke-width: 0.3;
+}
