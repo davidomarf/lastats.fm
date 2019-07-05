@@ -1,23 +1,7 @@
 .day {
   fill: lighten(#383c4a, 10);
-  stroke-width: 0;
   &:hover {
     stroke-width: 2;
-  }
-}
-
-.color {
-  &-1 {
-    fill: #FEE087;
-  }
-  &-2 {
-    fill: #FEAB4B;
-  }
-  &-3 {
-    fill: #FA5D2E;
-  }
-  &-4 {
-    fill: #D31120;
   }
 }
 
@@ -27,7 +11,7 @@
     text-anchor: end;
     fill: lighten(#282c3a, 60);
   }
-    fill: lighten(#282c3a, 60);
+  fill: lighten(#282c3a, 60);
   font-size: 8.5px;
   vertical-align: top;
   &.month-flag {
