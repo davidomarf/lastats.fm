@@ -191,7 +191,6 @@ class Heatmap extends React.Component {
           // Avoid drawing the month more than once
           writeMonthNameNextSunday = false;
         }
-        weekShift++;
       }
 
       /* ---------------------- Append a heatmap cell --------------------- */
@@ -223,49 +222,7 @@ class Heatmap extends React.Component {
    * It's expected that the component will be updated every time UserPage
    * fetches one more page of the scrobbles list.
    */
-  componentDidUpdate() {
-    // Assign the props value to a variable to avoid writing a lot
-    let lastList = this.props.user.scrobbles;
-
-    // If the list is empty, don't proceed
-    if (lastList.length === 0) return;
-
-    // Since this function runs every time it updates, and the only reason for
-    // it to update is because UserPage added an item to the scrobbles list,
-    // we can safely just work with the last item on that list (which) is a list
-    lastList = lastList[lastList.length - 1];
-
-    // This ensures that there are items on lastList that fit inside the period
-    // that the Heatmap is displaying.
-    if (
-      (lastList.start >= this.startDate.utc &&
-        lastList.start <= this.endDate.utc) ||
-      (lastList.end <= this.endDate.utc && lastList.end >= this.startDate.utc)
-    ) {
-      // Convert the list of scrobble objects into a list of strings using the
-      // date to determine an ID
-      let idList = lastList.list.map(e =>
-        getIDFromDay(new Date(1000 * Number(e.date.uts)))
-      );
-
-      // This counts the number of times that a given id appears in the
-      // current list of ids
-      for (let i = 0; i < idList.length; i++) {
-        let id = idList[i];
-        // If this.frequencyList.id is defined, increment its value
-        if (this.frequencyList[id]) {
-          this.frequencyList[id]++;
-        }
-        // If not, it means it's the first time that id appears, so initialize it
-        else {
-          this.frequencyList[id] = 1;
-        }
-      }
-
-      // Update the values considering the new added scrobbles
-      this.updateHeatmapValues();
-    }
-  }
+  componentDidUpdate() {}
 
   /**
    * React function to run when the component has been mounted
@@ -292,6 +249,35 @@ class Heatmap extends React.Component {
     // Initialize the tooltip. Draw it after all other items so it stays at top
     tooltip = svg.append("rect");
     tooltip_text = svg.append("text");
+
+    // Assign the props value to a variable to avoid writing a lot
+    let lastList = this.props.user.scrobbles;
+
+    // Convert the list of scrobble objects into a list of strings using the
+    // date to determine an ID
+    let idList = [].concat.apply(
+      [],
+      lastList.map(e =>
+        e.list.map(e => getIDFromDay(new Date(1000 * Number(e.date.uts))))
+      )
+    );
+
+    // This counts the number of times that a given id appears in the
+    // current list of ids
+    for (let i = 0; i < idList.length; i++) {
+      let id = idList[i];
+      // If this.frequencyList.id is defined, increment its value
+      if (this.frequencyList[id]) {
+        this.frequencyList[id]++;
+      }
+      // If not, it means it's the first time that id appears, so initialize it
+      else {
+        this.frequencyList[id] = 1;
+      }
+    }
+
+    // Update the values considering the new added scrobbles
+    this.updateHeatmapValues();
   }
 
   render() {

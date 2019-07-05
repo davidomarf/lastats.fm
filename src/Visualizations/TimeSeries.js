@@ -99,7 +99,7 @@ class TimeSeries extends React.Component {
       }
       svg
         .append("circle")
-        .attr("cx", monthShift + i * 10 + 2)
+        .attr("cx", monthShift + i * 10 - 3)
         .attr("curve-y", 0)
         .attr("cy", 0)
         .attr("r", 1)
@@ -121,53 +121,7 @@ class TimeSeries extends React.Component {
    * It's expected that the component will be updated every time UserPage
    * fetches one more page of the scrobbles list.
    */
-  componentDidUpdate() {
-    // Assign the props value to a variable to avoid writing a lot
-    let lastList = this.props.user.scrobbles;
-
-    // If the list is empty, don't proceed
-    if (lastList.length === 0) return;
-
-    // Since this function runs every time it updates, and the only reason for
-    // it to update is because UserPage added an item to the scrobbles list,
-    // we can safely just work with the last item on that list (which) is a list
-    lastList = lastList[lastList.length - 1];
-
-    // This ensures that there are items on lastList that fit inside the period
-    // that the Heatmap is displaying.
-    if (
-      (lastList.start >= this.startDate.utc &&
-        lastList.start <= this.endDate.uts) ||
-      (lastList.end <= this.endDate.uts && lastList.end >= this.startDate.utc)
-    ) {
-      // Convert the list of scrobble objects into a list of strings using the
-      // date to determine an ID
-      let idList = lastList.list
-        .map(e =>
-          getIDFromDate(
-            new Date(
-              1000 * Math.ceil(Number(e.date.uts) / 604800) * 604800 - 259200000
-            )
-          )
-        )
-        .filter(e => this.frequencyList[e] !== undefined);
-
-      console.log(idList);
-
-      // This counts the number of times that a given id appears in the
-      // current list of ids
-      for (let i = 0; i < idList.length; i++) {
-        let id = idList[i];
-        // If this.frequencyList.id is defined, increment its value
-        if (this.frequencyList[id] !== undefined) {
-          this.frequencyList[id]++;
-        }
-      }
-
-      // Update the values considering the new added scrobbles
-      this.updateHeatmapValues();
-    }
-  }
+  componentDidUpdate() {}
 
   /**
    * React function to run when the component has been mounted
@@ -195,6 +149,40 @@ class TimeSeries extends React.Component {
     // Initialize the tooltip. Draw it after all other items so it stays at top
     tooltip = svg.append("rect");
     tooltip_text = svg.append("text");
+
+    // Assign the props value to a variable to avoid writing a lot
+    let lastList = this.props.user.scrobbles;
+
+    // Convert the list of scrobble objects into a list of strings using the
+    // date to determine an ID
+    let idList = [].concat.apply(
+      [],
+      lastList.map(e =>
+        e.list
+          .map(e =>
+            getIDFromDate(
+              new Date(
+                1000 * Math.ceil(Number(e.date.uts) / 604800) * 604800 -
+                  259200000
+              )
+            )
+          )
+          .filter(e => this.frequencyList[e] !== undefined)
+      )
+    );
+
+    // This counts the number of times that a given id appears in the
+    // current list of ids
+    for (let i = 0; i < idList.length; i++) {
+      let id = idList[i];
+      // If this.frequencyList.id is defined, increment its value
+      if (this.frequencyList[id] !== undefined) {
+        this.frequencyList[id]++;
+      }
+    }
+
+    // Update the values considering the new added scrobbles
+    this.updateHeatmapValues();
   }
 
   render() {
