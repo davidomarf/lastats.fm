@@ -15,6 +15,7 @@
 import React from "react";
 import styles from "./Heatmap.module.scss";
 import * as d3 from "d3";
+import * as utils from "../utils/visualization-utils";
 
 /* -------------------------- Component Definition -------------------------- */
 
@@ -24,9 +25,8 @@ import * as d3 from "d3";
 class Heatmap extends React.Component {
   constructor(props) {
     super(props);
-
     // List containing {id:count} elements, where id is the ID generated using
-    // getIDFromDay(), and count is the number of scrobbles in that date
+    // utils.getIDFromDate(), and count is the number of scrobbles in that date
     this.frequencyList = {};
 
     // Maximum number of scrobbles in a single day
@@ -54,13 +54,11 @@ class Heatmap extends React.Component {
    *
    * Write "Mon", "Wed", and "Fri" at the leftmost part of the visualization
    * for the corresponding rows.
-   *
-   * @param {Object} svg  SVG element where the graph is drawn
    */
-  drawWeekDays(svg) {
+  drawWeekDays() {
     let days = ["Mon", "Wed", "Fri"];
     for (let i = 0; i < days.length; i++) {
-      svg
+      this.svg
         .append("text")
         .attr("x", 10)
         .attr("y", (i + 1) * 20 - 4.25)
@@ -74,16 +72,14 @@ class Heatmap extends React.Component {
    *
    * The legend will display all the available color tags, and the range of
    * values each one indicates.
-   *
-   * @param {Object} svg  SVG element where the graph is drawn
    */
-  drawLegend(svg) {
+  drawLegend() {
     let text = [
       [20, 100, "Less"],
       [45 + (this.numberOfColorTags + 1) * 10, 100, "More"]
     ];
 
-    svg
+    this.svg
       .selectAll("text")
       .data(text)
       .enter()
@@ -94,7 +90,7 @@ class Heatmap extends React.Component {
       .text((d) => d[2]);
 
     for (let i = 0; i <= this.numberOfColorTags; i++) {
-      svg
+      this.svg
         .append("rect")
         .attr("x", 42 + i * 10)
         .attr("y", 92)
@@ -145,9 +141,9 @@ class Heatmap extends React.Component {
     }
   }
 
-  drawHeatmapCells(svg) {
+  drawHeatmapCells() {
     // Create an array of dates for the year
-    let dates = getDateArray(this.startDate.date, this.endDate.date);
+    let dates = utils.getDateArray(this.startDate.date, this.endDate.date);
 
     // The shifting values are the ones that displace the cells in the x
     // coordinate every new week or month
@@ -182,11 +178,11 @@ class Heatmap extends React.Component {
 
         // If we have to write the name of the month on top
         if (writeMonthNameNextSunday) {
-          svg
+          this.svg
             .append("text")
             .attr("x", 20 + monthShift + weekShift * 10)
             .attr("y", 80)
-            .text(months[dates[`${i}`].getMonth()])
+            .text(utils.months[dates[`${i}`].getMonth()])
             .attr("class", styles["meta-text"] + " " + styles["month-flag"]);
 
           // Avoid drawing the month more than once
@@ -197,9 +193,9 @@ class Heatmap extends React.Component {
       /* ---------------------- Append a heatmap cell --------------------- */
 
       // Get the ID for the cell using the date
-      let id = getIDFromDay(dates[`${i}`]);
+      let id = utils.getIDFromDate(dates[`${i}`], "hm");
 
-      svg
+      this.svg
         .append("circle")
         .attr("cx", 22 + monthShift + weekShift * 10)
         .attr("cy", 2 + weekDay * 10)
@@ -209,7 +205,7 @@ class Heatmap extends React.Component {
         .attr("class", style)
         // The attributes 'date' and 'scrobbles' are used to get the content
         // of the tooltip when hovering on a cell
-        .attr("date", formatDate(dates[`${i}`]))
+        .attr("date", utils.formatDate(dates[`${i}`]))
         .attr("scrobbles", 0)
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
@@ -218,22 +214,15 @@ class Heatmap extends React.Component {
   }
 
   /**
-   * React function to run when the component updates
-   *
-   * It's expected that the component will be updated every time UserPage
-   * fetches one more page of the scrobbles list.
-   */
-  componentDidUpdate() {}
-
-  /**
    * React function to run when the component has been mounted
    *
    * This runs only once, and uses that fact to initialize the canvas, and append
    * the items that won't be redrawn.
    */
   componentDidMount() {
+    // Draw the Heatmap structure: Legend, texts, and cells
     // This creates the svg for the graph
-    const svg = d3
+    this.svg = d3
       .select(`#d3-section-${this.props.title}`)
       .append("svg")
       // This makes the svg element responsive
@@ -242,27 +231,32 @@ class Heatmap extends React.Component {
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "-20 -5 640 120");
 
-    // Draw the Heatmap structure: Legend, texts, and cells
-    this.drawLegend(svg);
-    this.drawWeekDays(svg);
-    this.drawHeatmapCells(svg);
+    this.drawLegend();
+    this.drawWeekDays();
+    this.drawHeatmapCells();
 
     // Initialize the tooltip. Draw it after all other items so it stays at top
-    tooltip = svg.append("rect");
-    tooltip_text = svg.append("text");
+    tooltip = this.svg.append("rect");
+    tooltip_text = this.svg.append("text");
 
-    // Assign the props value to a variable to avoid writing a lot
-    let lastList = this.props.user.scrobbles;
+    this.updateFrequencyList(this.props.user.scrobbles);
 
+    // Update the values considering the new added scrobbles
+    this.updateHeatmapValues();
+  }
+
+  updateFrequencyList(scrobbleList) {
     // Convert the list of scrobble objects into a list of strings using the
     // date to determine an ID
     let idList = [].concat.apply(
       [],
-      lastList.map((e) =>
-        e.list.map((e) => getIDFromDay(new Date(1000 * Number(e.date.uts))))
+      scrobbleList.map((e) =>
+        e.list.map((e) =>
+          utils.getIDFromDate(new Date(1000 * Number(e.date.uts)), "hm")
+        )
       )
     );
-
+    
     // This counts the number of times that a given id appears in the
     // current list of ids
     for (let i = 0; i < idList.length; i++) {
@@ -276,9 +270,6 @@ class Heatmap extends React.Component {
         this.frequencyList[`${id}`] = 1;
       }
     }
-
-    // Update the values considering the new added scrobbles
-    this.updateHeatmapValues();
   }
 
   render() {
@@ -291,69 +282,6 @@ class Heatmap extends React.Component {
       </>
     );
   }
-}
-
-/* ---------------------------- Helping Functions --------------------------- */
-
-/**
- * Formats a Date in a readable String.
- *
- * The format is Month dd, YYYY.
- *
- * @param {Object} date  Date to be formatted
- * @returns {string}     Date to string in format Month dd, YYYY
- */
-function formatDate(date) {
-  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-}
-
-// Used to render the month's name without calling Date.toLocaleDateString()
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-];
-
-/**
- * Generate an array of dates containing every day between start and end.
- *
- * If start is a later date than end, it will generate the dates backwards.
- *
- * @param {Object} start  First value of the array
- * @param {Object} end    Last value of the array
- * @return {Object[]}     All the dates between start and end
- */
-function getDateArray(start, end) {
-  let step = 1;
-  if (start > end) step = -1;
-  let arr = [];
-  let dt = new Date(start);
-
-  while (dt <= end) {
-    arr.push(new Date(dt));
-    dt.setDate(dt.getDate() + step);
-  }
-
-  return arr;
-}
-
-/**
- * Creates an ID for a date using its Year, Month, Date.
- *
- * @param {Object} date Date to be used
- * @returns {string}    "hm-" + Date in format YYYY-MM-D
- */
-function getIDFromDay(date) {
-  return `hm-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 /**
