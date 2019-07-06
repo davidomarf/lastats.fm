@@ -13,6 +13,7 @@
 import React from "react";
 import styles from "./TimeSeries.module.scss";
 import * as d3 from "d3";
+import * as utils from "../utils/visualization-utils";
 
 const lineFunction = d3
   .line()
@@ -66,11 +67,17 @@ class TimeSeries extends React.Component {
 
     for (let i = 0; i < freqArray.length; i++) {
       d3.select("#" + freqArray[`${i}`].key)
-        .attr("curve-y", -(freqArray[`${i}`].value / this.mostScrobblesInAWeek) * 60)
+        .attr(
+          "curve-y",
+          -(freqArray[`${i}`].value / this.mostScrobblesInAWeek) * 60
+        )
+        .attr("scrobbles", freqArray[`${i}`].value)
         .transition()
         .duration(2000)
-        .attr("cy", -(freqArray[`${i}`].value / this.mostScrobblesInAWeek) * 60)
-        .attr("scrobbles", freqArray[`${i}`].value);
+        .attr(
+          "cy",
+          -(freqArray[`${i}`].value / this.mostScrobblesInAWeek) * 60
+        );
       d3.select("#ts-curve")
         .transition()
         .duration(2000)
@@ -79,8 +86,11 @@ class TimeSeries extends React.Component {
   }
 
   drawHeatmapCells(svg) {
-    // Create an array of dates for the year
-    let dates = getDateArray(this.startDate.date, this.endDate.date);
+    let firstMonday = new Date(this.startDate.date).setDate(
+      this.startDate.date.getDate() - this.startDate.date.getDay()
+    );
+
+    let dates = utils.getDateArray(firstMonday, this.endDate.date, 7);
     let style = styles["week-circle"];
 
     svg
@@ -92,7 +102,7 @@ class TimeSeries extends React.Component {
       .attr("fill", "none");
     let monthShift = 20;
     for (let i = 0; i < dates.length; i++) {
-      let id = getIDFromDate(dates[`${i}`]);
+      let id = utils.getIDFromDate(dates[`${i}`], "ts");
       this.frequencyList[`${id}`] = 0;
       if (dates[`${i}`].getDate() <= 7) {
         monthShift += 5;
@@ -107,7 +117,7 @@ class TimeSeries extends React.Component {
         .attr("id", id)
         // The attributes 'date' and 'scrobbles' are used to get the content
         // of the tooltip when hovering on a cell
-        .attr("date", formatDate(dates[`${i}`]))
+        .attr("date", utils.formatDate(dates[`${i}`]))
         .attr("scrobbles", 0)
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
@@ -159,14 +169,11 @@ class TimeSeries extends React.Component {
       [],
       lastList.map((e) =>
         e.list
-          .map((e) =>
-            getIDFromDate(
-              new Date(
-                1000 * Math.ceil(Number(e.date.uts) / 604800) * 604800 -
-                  259200000
-              )
-            )
-          )
+          .map((e) => {
+            let weekMonday = new Date(1000 * Math.ceil(Number(e.date.uts)));
+            weekMonday.setDate(weekMonday.getDate() - weekMonday.getDay());
+            return utils.getIDFromDate(weekMonday, "ts");
+          })
           .filter((e) => this.frequencyList[`${e}`] !== undefined)
       )
     );
@@ -195,71 +202,6 @@ class TimeSeries extends React.Component {
       </>
     );
   }
-}
-
-/* ---------------------------- Helping Functions --------------------------- */
-
-/**
- * Formats a Date in a readable String.
- *
- * The format is Month dd, YYYY.
- *
- * @param {Object} date  Date to be formatted
- * @returns {string}     Date to string in format Month dd, YYYY
- */
-function formatDate(date) {
-  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-}
-
-// Used to render the month's name without calling Date.toLocaleDateString()
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-];
-
-/**
- * Generate an array of dates containing every day between start and end.
- *
- * If start is a later date than end, it will generate the dates backwards.
- *
- * @param {Object} start  First value of the array
- * @param {Object} end    Last value of the array
- * @return {Object[]}     All the dates between start and end
- */
-function getDateArray(start, end) {
-  start.setDate(start.getDate() - start.getDay());
-  end.setDate(end.getDate() + 6 - end.getDay());
-  let step = 7;
-  if (start > end) step = -7;
-  let arr = [];
-  let dt = new Date(start);
-
-  while (dt <= end) {
-    arr.push(new Date(dt));
-    dt.setDate(dt.getDate() + step);
-  }
-
-  return arr;
-}
-
-/**
- * Creates an ID for a date using its Year, Month, Date.
- *
- * @param {Object} date Date to be used
- * @returns {string}    "hm-" + Date in format YYYY-MM-D
- */
-function getIDFromDate(date) {
-  return `ts-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 /* --------------------------- D3 Tooltip Elements -------------------------- */
