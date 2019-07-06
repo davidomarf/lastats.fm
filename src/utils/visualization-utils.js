@@ -46,7 +46,9 @@ export function formatDate(date) {
  */
 export function getDateArray(start, end, step = 1) {
   if (start > end) {
-    throw "Start date is bigger than end date (start is in the future of end)";
+    throw new Error(
+      "Start date is bigger than end date (start is in the future of end)"
+    );
   }
   let arr = [];
   let dt = new Date(start);
