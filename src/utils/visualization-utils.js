@@ -6,40 +6,6 @@
  * @since   v2.0.0
  */
 
-import * as d3 from "d3";
-
-export class Tooltip {
-  constructor(svg) {
-    this.tooltip = svg.append("rect");
-    this.tooltip_text = svg.append("rect");
-  }
-
-  mouseOver(d) {
-    this.tooltip.style("opacity", 0.8);
-    this.tooltip_text.style("opacity", 1);
-  }
-
-  mouseMove(d) {
-    this.tooltip_text
-      .style("fill", "white")
-      .text("Hola culeros")
-      .attr("class", "hola-culeros")
-      .attr("x", d3.mouse(this)[0])
-      .attr("y", d3.mouse(this)[1]);
-
-    this.tooltip
-      .attr("width", 100)
-      .attr("height", 15)
-      .attr("x", d3.mouse(this)[0] + 5)
-      .attr("y", d3.mouse(this)[1] - 10);
-  }
-
-  mouseleave(d) {
-    this.tooltip.style("opacity", 0);
-    this.tooltip_text.text("");
-  }
-}
-
 // Used to render the month's name without calling Date.toLocaleDateString()
 export const months = [
   "Jan",
