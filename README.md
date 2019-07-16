@@ -85,6 +85,10 @@ To contribute with the development you'll need a working copy of the repo in you
   $ cd lastfm
   ```
 
+- [Get an API Key from last.fm](https://www.last.fm/api/account/create)
+
+- Create a `.env` file with this content: `REACT_APP_LAST_FM_API={your-api}`
+
 - Available scripts
 
   - `npm start` / `yarn start`
