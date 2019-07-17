@@ -100,7 +100,7 @@ class TimeSeries extends React.Component {
       .attr("stroke", "#4e5467")
       .attr("stroke-width", 0.5)
       .attr("fill", "none");
-    let monthShift = 20;
+    let monthShift = 0;
     for (let i = 0; i < dates.length; i++) {
       let id = utils.getIDFromDate(dates[`${i}`], "ts");
       this.frequencyList[`${id}`] = 0;
@@ -109,7 +109,7 @@ class TimeSeries extends React.Component {
       }
       svg
         .append("circle")
-        .attr("cx", monthShift + i * 10 - 3)
+        .attr("cx", 22 + monthShift+ i * 10)
         .attr("curve-y", 0)
         .attr("cy", 0)
         .attr("r", 1)
