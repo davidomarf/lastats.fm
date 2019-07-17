@@ -104,7 +104,6 @@ class UserPage extends React.Component {
         render={({ state, fullpageApi }) => {
           return (
             <div id="fullpage-wrapper">
-              {/* Heatmap Graph */}
               <div className="section">
                 <center>
                   <h2>
