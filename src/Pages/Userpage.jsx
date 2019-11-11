@@ -1,7 +1,6 @@
 import React from "react";
 
 import styles from "./Userpage.module.scss";
-import ReactFullpage from "@fullpage/react-fullpage";
 
 import Heatmap from "../Visualizations/Heatmap";
 
@@ -84,22 +83,14 @@ class UserPage extends React.Component {
   render() {
     return (
       // Return a Full Page component
-      <ReactFullpage
-        render={({ state, fullpageApi }) => {
-          return (
-            <div id="fullpage-wrapper">
-              <div className="section">
-                <div className={styles["section-container"]}>
-                  {/* Mount Heatmap only when the scrobbles are set */}
-                  {this.state.scrobbles && (
-                    <Heatmap title="Heatmap" user={this.state} />
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        }}
-      />
+      <div className="section">
+        <div className={styles["section-container"]}>
+          {/* Mount Heatmap only when the scrobbles are set */}
+          {this.state.scrobbles && (
+            <Heatmap title="Heatmap" user={this.state} />
+          )}
+        </div>
+      </div>
     );
   }
 }
