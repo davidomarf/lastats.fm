@@ -1,6 +1,8 @@
 import Head from "next/head";
+import Link from "next/link";
 import * as Papa from "papaparse";
 import { useEffect, useState } from "react";
+import Counter from "../components/counter";
 
 const Post = () => {
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -23,11 +25,14 @@ const Post = () => {
       <Head>
         <title>CSV Upload</title>
       </Head>
-
+      <Link href="/user/davidomarf">
+        <a>User</a>
+      </Link>
       <input
         type="file"
         onChange={(e) => setSelectedFile(e.target.files![0])}
       />
+      <Counter></Counter>
     </>
   );
 };
