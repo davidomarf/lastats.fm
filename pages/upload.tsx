@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import * as Papa from "papaparse";
 import { useEffect, useState } from "react";
-import Counter from "../components/counter";
+import { Counter } from "../components/counter";
 
 const Post = () => {
   const [selectedFile, setSelectedFile] = useState<File>();
