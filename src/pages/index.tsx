@@ -1,63 +1,42 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import { useAppSelector } from "@hooks";
+import classNames from "classnames/bind";
+import CalendarHeatmap from "components/calendar/Calendar";
+import Upload from "components/upload/Upload";
+import { selectScrobbleData } from "components/upload/uploadSlice";
+import type { NextPage } from "next";
+import { useRouter } from "next/dist/client/router";
+import Head from "next/head";
+import Link from "next/link";
+import styles from "../styles/Home.module.scss";
 
-import Counter from '../features/counter/Counter'
-import styles from '../styles/Home.module.css'
+const cx = classNames.bind(styles);
 
 const IndexPage: NextPage = () => {
+  const router = useRouter();
+
+  const scrobbleData = useAppSelector(selectScrobbleData);
+
+  const { artist } = router.query;
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Redux Toolkit</title>
+        <title>Stats.fm</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className={styles.header}>
-        <img src="/logo.svg" className={styles.logo} alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className={styles.link}
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className={styles.link}
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className={styles.link}
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className={styles.link}
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <section className={cx("content", "content--centered")}>
+        {!scrobbleData?.length ? <Upload /> : null}
+        {scrobbleData?.length ? (
+          <>
+            <Link href="/">
+              <a>Clean filters</a>
+            </Link>
+            <CalendarHeatmap artistToSearch={artist as string} />
+          </>
+        ) : null}
+      </section>
     </div>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;

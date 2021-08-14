@@ -1,0 +1,43 @@
+.heatmapTooltip {
+  background: white;
+  padding: 0.5em 1em;
+  font-size: 0.8rem;
+  border-radius: 4px;
+
+  box-shadow: 0 0.938em 2.188em rgba(50, 50, 93, 0.15),
+    0 0.313em 0.938em rgba(0, 0, 0, 0.1);
+
+  span {
+    display: block;
+  }
+
+  .header {
+    margin-bottom: 0.5rem;
+    font-size: 1.125em;
+    font-weight: bold;
+
+    .scrobbles {
+      font-weight: normal;
+      font-size: 0.9em;
+      color: #888;
+    }
+  }
+
+  .highlights {
+    ul {
+      list-style: none;
+      padding: 0;
+      padding-left: 1rem;
+    }
+    .title {
+      font-weight: bold;
+    }
+
+    span {
+      display: inline;
+    }
+    .scrobble-count {
+      color: #888;
+    }
+  }
+}
