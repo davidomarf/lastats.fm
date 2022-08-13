@@ -3,7 +3,8 @@
 @import "./theme";
 
 html,
-body {
+body,
+input {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -27,4 +28,36 @@ code {
 
 * {
   box-sizing: border-box;
+}
+
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+ul {
+  li {
+    line-height: 1.88;
+  }
+}
+
+input[type="text"] {
+  padding: 1rem;
+  line-height: 19px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-blue400);
+  outline: none;
+  caret-color: var(--color-accent);
+  color: var(--color-contrast);
+
+  &:active,
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-contrast);
+  }
 }

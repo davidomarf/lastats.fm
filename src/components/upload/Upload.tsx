@@ -49,7 +49,7 @@ function Upload() {
           </p>
           <a
             className="button button--as-text"
-            href="https://export.stats.fm"
+            href="https://export.lastats.fm"
             target="_blank"
             rel="noreferrer"
           >

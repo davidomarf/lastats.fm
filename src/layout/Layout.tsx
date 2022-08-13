@@ -19,7 +19,7 @@ function Layout({ children }: { children: JSX.Element }) {
           ['Profile', 'Top Artists', 'Top Tracks', 'Year Review'].map(title => {
             const slug = title.toLowerCase().replace(/\s/g, '-');
 
-            return <ActiveLink activeClassName={cx('active')} href={slug}>
+            return <ActiveLink activeClassName={cx('active')} href={slug} key={slug}>
               <li className={cx('sidebar__main-link')}>
                 {title}
               </li>
@@ -28,7 +28,7 @@ function Layout({ children }: { children: JSX.Element }) {
         }
       </ul>
     </nav>
-    <div className={cx("content")}>
+    <div className={cx("content", "content--cx")}>
       {children}
     </div>
   </div>
