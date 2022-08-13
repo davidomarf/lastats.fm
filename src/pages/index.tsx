@@ -19,7 +19,7 @@ const IndexPage: NextPage = () => {
   const { artist } = router.query;
 
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Stats.fm</title>
         <link rel="icon" href="/favicon.ico" />
@@ -35,7 +35,7 @@ const IndexPage: NextPage = () => {
           </>
         ) : null}
       </section>
-    </div>
+    </>
   );
 };
 
