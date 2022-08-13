@@ -37,7 +37,7 @@ const IndexPage: NextPage = () => {
             If you have a last.fm account, that probably means you love music.
           </h3>
           <h3>
-            And that may mean that, at least once, you've wondered...
+            And that may mean that, at least once, you`&apos;`ve wondered...
           </h3>
           <ul>
             <li>
@@ -65,7 +65,7 @@ const IndexPage: NextPage = () => {
           </p>
 
           <h3>
-            Wanna try? Let's start!
+            Wanna try? Let`&apos;`s start!
           </h3>
 
           <div className={cx("start-action-container")} onClick={() => usernameInputRef.current?.focus()}>
@@ -85,7 +85,7 @@ const IndexPage: NextPage = () => {
               Upload an existing laststs.fm CSV,
             </div>
             <div className={cx('start-action__description')}>
-              and it'll immediately load all the saved data, while updating the
+              and it`&apos;`ll immediately load all the saved data, while updating the
               uploaded file with your last scrobbles
             </div>
             <p>
