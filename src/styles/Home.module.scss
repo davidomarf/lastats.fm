@@ -6,6 +6,9 @@
   height: 100vh;
   overflow: hidden;
 
+  background-color: var(--color-background);
+  color: var(--color-text);
+
   &--centered {
     align-items: center;
     justify-content: center;
