@@ -61,7 +61,7 @@ const IndexPage: NextPage = () => {
           </ul>
 
           <p>
-            If you have, you'll find lastats.fm interesting.
+            If you have, you&apos;ll find lastats.fm interesting.
           </p>
 
           <h3>
