@@ -24,7 +24,7 @@ const IndexPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section style={{ "maxWidth": "90%" }}>
+      <section style={{ "maxWidth": "90%", "height": "fit-content" }}>
         <div className="color-white50">
 
           <h1 className="color-white75">lastats.fm</h1>
@@ -61,7 +61,7 @@ const IndexPage: NextPage = () => {
           </ul>
 
           <p>
-            I have. So I decided to build this website.
+            If you have, you'll find lastats.fm interesting.
           </p>
 
           <h3>

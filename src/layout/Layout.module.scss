@@ -75,9 +75,12 @@
     height: 100%;
 
     padding: 2rem;
+    padding-bottom: 6rem;
 
     background-color: var(--color-background);
     color: var(--color-text);
+
+    overflow: auto;
 
     &--cv {
       align-items: center;
