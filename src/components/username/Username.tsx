@@ -75,21 +75,23 @@ function UsernameInput() {
         and the website will start to update every few seconds with
         all the new data it gets from your scrobbling history
       </div>
-      <form onSubmit={handleFormSubmit} action="">
+      <form onSubmit={handleFormSubmit}>
         <label
           htmlFor="username"
-          style={{ "display": "none" }}
+          hidden
         >
           Username
         </label>
-        <input ref={usernameInputRef}
+        <input
+          className={cx('start-action__input')}
+          ref={usernameInputRef}
           type="text"
           name="username"
           id="input-username"
           placeholder="Username"
           onChange={event => setUsername(event.target.value)}
         />
-        <button type="submit" className="button" style={{ marginLeft: '2rem' }}> Get my scrobbles! </button>
+        <button type="submit" className={cx('start-action__button', 'button')}> Get my scrobbles! </button>
       </form>
     </div>
   );

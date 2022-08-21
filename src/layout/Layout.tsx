@@ -24,7 +24,9 @@ function Layout({ children }: { children: JSX.Element }) {
               ({scrobbles.length} / {username.playcount} scrobbles)
             </span>
           </p>
-          <div className={cx('progress-indicator__bar')} style={{ width: `${100 * (scrobbles.length / username.playcount)}%` }}></div>
+          <div
+            className={cx('progress-indicator__bar')}
+            style={{ width: `${100 * (scrobbles.length / username.playcount)}%` }}></div>
         </div>
         : <div className={cx('progress-indicator')}>
           <p>
