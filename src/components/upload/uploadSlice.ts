@@ -37,6 +37,8 @@ export const { setScrobbles, addScrobbles, setByDay } =
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.scrobbleData.value)`
 export const selectScrobbleData = (state: AppState) => state.scrobbleData.value;
+export const selectScrobblesLength = (state: AppState) =>
+  state.scrobbleData.value.length;
 export const selectScrobbleDataStatus = (state: AppState) =>
   state.scrobbleData.status;
 export const selectScrobbleByDay = (state: AppState) =>

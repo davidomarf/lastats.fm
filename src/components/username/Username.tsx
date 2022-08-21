@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@hooks";
 import { getScrobbles, getUserInfo } from "api/lastfm";
 import classNames from "classnames/bind";
+import { addScrobbles } from "components/upload/uploadSlice";
 import { Track } from "models/ScrobblePage";
 import { User } from "models/User";
 import { FormEvent, useRef, useState } from "react";
@@ -34,18 +35,28 @@ function UsernameInput() {
         return;
       }
       try {
-        const ids = new Map();
-        const pc = await getScrobbles(user, 1, 200);
+        const pageSize = 200;
+
+        const pc = await getScrobbles(user, 1, pageSize);
         if (pc[0]["@attr"]?.nowplaying) {
           pc.shift();
         }
 
         const promises: Promise<Track[]>[] = [];
-        const pages = Math.ceil(info!.playcount! / 200);
+        const pages = Math.ceil(info!.playcount! / pageSize);
         console.log({ pages });
         for (let i = 0; i < pages; i++) {
-          promises.push(getScrobbles(user, i + 1, 200));
+          promises.push(getScrobbles(user, i + 1, pageSize));
         }
+
+        promises.forEach(promise =>
+          promise.then(tracks => {
+            if (tracks[0]["@attr"]?.nowplaying) {
+              tracks.shift();
+            }
+            dispatch(addScrobbles(tracks));
+          })
+        )
 
         Promise.all(promises).then((trackArray) => {
           const totalTracks = [];
