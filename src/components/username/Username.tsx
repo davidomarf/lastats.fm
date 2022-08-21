@@ -1,17 +1,23 @@
+import { useAppDispatch } from "@hooks";
 import { getUserInfo } from "api/lastfm";
 import classNames from "classnames/bind";
+import { User } from "models/User";
 import { FormEvent, useCallback, useRef, useState } from "react";
 import styles from './Username.module.scss';
+import { setUsername as setUsernameRedux } from "./usernameSlice";
 
 const cx = classNames.bind(styles);
 
 function UsernameInput() {
   const [username, setUsername] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleFormSubmit = useCallback((event: FormEvent) => {
     event.preventDefault();
 
-    getUserInfo(username).then(console.log)
+    getUserInfo(username).then((info: User) => {
+      dispatch(setUsernameRedux(info))
+    })
   }, [username])
 
   const usernameInputRef = useRef<HTMLInputElement>(null);
