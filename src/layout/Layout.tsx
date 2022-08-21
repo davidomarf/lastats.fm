@@ -6,7 +6,7 @@ import { selectUsername } from "components/username/userSlice";
 import Link from "next/link";
 import { CSVLink } from "react-csv";
 
-import styles from './Layout.module.scss';
+import styles from "./Layout.module.scss";
 
 let cx = classNames.bind(styles);
 
@@ -14,61 +14,70 @@ function Layout({ children }: { children: JSX.Element }) {
   const username = useAppSelector(selectUsername);
   const scrobbles = useAppSelector(selectScrobbleData);
 
-  return <div className={cx("layout")}>
-    {username
-      ? username.playcount > scrobbles.length
-        ? <div className={cx('progress-indicator')}>
-          <p>
-            Downloading <b>{username.name}</b> history,
-            this make take a while <span className={cx('scrobble-count')}>
-              ({scrobbles.length} / {username.playcount} scrobbles)
-            </span>
-          </p>
-          <div
-            className={cx('progress-indicator__bar')}
-            style={{ width: `${100 * (scrobbles.length / username.playcount)}%` }}></div>
-        </div>
-        : <div className={cx('progress-indicator')}>
-          <p>
-            All your scrobbles have been fetched! To save the fetching time in future sessions, <button
-              className="button button--as-text"
-              type="button"
-              name="Export scrobbles"
-              formTarget="_blank"
-            >
-              <CSVLink filename={username.name} data={scrobbles}>
-                download your lastats.fm CSV
-              </CSVLink>
-            </button>
-          </p>
-        </div>
-      : <></>
-    }
-    <nav className={cx("sidebar")}>
-      <Link href='/'>
-        <div className={cx("sidebar__logo")}>
-          Home
-        </div>
-      </Link>
-      <ul className={cx('sidebar__main-link-container')}>
-        {
-          ['Profile', 'Top Artists', 'Top Tracks', 'Year Review'].map(title => {
-            const slug = title.toLowerCase().replace(/\s/g, '-');
+  return (
+    <div className={cx("layout")}>
+      {username ? (
+        username.playcount > scrobbles.length ? (
+          <div className={cx("progress-indicator")}>
+            <p>
+              Downloading <b>{username.name}</b> history, this make take a while{" "}
+              <span className={cx("scrobble-count")}>
+                ({scrobbles.length} / {username.playcount} scrobbles)
+              </span>
+            </p>
+            <div
+              className={cx("progress-indicator__bar")}
+              style={{
+                width: `${100 * (scrobbles.length / username.playcount)}%`,
+              }}
+            ></div>
+          </div>
+        ) : (
+          <div className={cx("progress-indicator")}>
+            <p>
+              All your scrobbles have been fetched! To save the fetching time in
+              future sessions,{" "}
+              <button
+                className="button button--as-text"
+                type="button"
+                name="Export scrobbles"
+                formTarget="_blank"
+              >
+                <CSVLink filename={username.name} data={scrobbles}>
+                  download your lastats.fm CSV
+                </CSVLink>
+              </button>
+            </p>
+          </div>
+        )
+      ) : (
+        <></>
+      )}
+      <nav className={cx("sidebar")}>
+        <Link href="/">
+          <div className={cx("sidebar__logo")}>Home</div>
+        </Link>
+        <ul className={cx("sidebar__main-link-container")}>
+          {["Profile", "Top Artists", "Top Tracks", "Year Review"].map(
+            (title) => {
+              const slug = title.toLowerCase().replace(/\s/g, "-");
 
-            return <ActiveLink activeClassName={cx('active')} href={slug} key={slug}>
-              <li className={cx('sidebar__main-link')}>
-                {title}
-              </li>
-            </ActiveLink>;
-          })
-        }
-      </ul>
-    </nav>
-    <div className={cx("content", "content--cx")}>
-      {children}
+              return (
+                <ActiveLink
+                  activeClassName={cx("active")}
+                  href={slug}
+                  key={slug}
+                >
+                  <li className={cx("sidebar__main-link")}>{title}</li>
+                </ActiveLink>
+              );
+            }
+          )}
+        </ul>
+      </nav>
+      <div className={cx("content", "content--cx")}>{children}</div>
     </div>
-  </div>
+  );
 }
-
 
 export default Layout;

@@ -1,8 +1,5 @@
-
 function Profile() {
-    return <>
-        This is year review!
-    </>
+  return <>This is year review!</>;
 }
 
 export default Profile;

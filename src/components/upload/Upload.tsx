@@ -31,22 +31,24 @@ function Upload() {
         dispatch(setScrobbles(data));
       },
     });
-  }, [dispatch, uploadedFile, setIsProcessing])
+  }, [dispatch, uploadedFile, setIsProcessing]);
 
   const uploadFileRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      <div className={cx("start-action-container")} onClick={() => uploadFileRef.current?.click()}>
-        <div className={cx('start-action__title')}>
+      <div
+        className={cx("start-action-container")}
+        onClick={() => uploadFileRef.current?.click()}
+      >
+        <div className={cx("start-action__title")}>
           Upload an existing laststs.fm CSV,
         </div>
-        <div className={cx('start-action__description')}>
+        <div className={cx("start-action__description")}>
           and it'll immediately load all the saved data, while updating the
           uploaded file with your last scrobbles
         </div>
-        <p>
-        </p>
+        <p></p>
         <input
           ref={uploadFileRef}
           multiple={false}
@@ -54,7 +56,9 @@ function Upload() {
           name="lastats-file"
           id="scrobble-data-upload"
           accept={ACCEPTED_CSV_FILES.join()}
-          onChange={(event) => { setUploadedFile(event.target.files![0]); }}
+          onChange={(event) => {
+            setUploadedFile(event.target.files![0]);
+          }}
         />
       </div>
     </>

@@ -45,6 +45,7 @@
     "@types/react-redux": "7.1.16",
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1",
+    "eslint-config-prettier": "^8.5.0",
     "jest": "^27.3.1",
     "jest-css-modules-transform": "^4.2.0",
     "ts-jest": "^27.0.7",
