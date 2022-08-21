@@ -2,7 +2,7 @@ import { useAppDispatch } from "@hooks";
 import classNames from "classnames/bind";
 import { Track } from "models/ScrobblePage";
 import * as Papa from "papaparse";
-import { useCallback, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Upload.module.scss";
 import { setScrobbles } from "./uploadSlice";
 
@@ -17,7 +17,7 @@ function Upload() {
 
   const dispatch = useAppDispatch();
 
-  const uploadFile = useCallback(() => {
+  useEffect(() => {
     if (!uploadedFile) {
       return;
     }
@@ -31,7 +31,7 @@ function Upload() {
         dispatch(setScrobbles(data));
       },
     });
-  }, [dispatch, uploadedFile, setIsProcessing]);
+  }, [dispatch, uploadedFile, setIsProcessing])
 
   const uploadFileRef = useRef<HTMLInputElement>(null);
 
@@ -54,7 +54,7 @@ function Upload() {
           name="lastats-file"
           id="scrobble-data-upload"
           accept={ACCEPTED_CSV_FILES.join()}
-          onChange={(event) => setUploadedFile(event.target.files![0])}
+          onChange={(event) => { setUploadedFile(event.target.files![0]); }}
         />
       </div>
     </>
