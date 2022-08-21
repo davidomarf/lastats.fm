@@ -19,15 +19,11 @@ export const scrobbleDataSlice = createSlice({
   initialState,
   reducers: {
     setScrobbles: (state, action: PayloadAction<Track[]>) => {
-      const tracks: SimplifiedTrack[] = action.payload.map(
-        (e) => new SimplifiedTrack(e)
-      );
+      const tracks: SimplifiedTrack[] = action.payload.map(SimplifiedTrack);
       state.value = tracks;
     },
     addScrobbles: (state, action: PayloadAction<Track[]>) => {
-      const tracks: SimplifiedTrack[] = action.payload.map(
-        (e) => new SimplifiedTrack(e)
-      );
+      const tracks: SimplifiedTrack[] = action.payload.map(SimplifiedTrack);
       state.value = [...state.value, ...tracks];
     },
     setByDay: (state, action: PayloadAction<{}>) => {
