@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { AppState } from "@store";
 import { LogEntry } from "models/Calendar";
-import { SimplifiedTrack, Track } from "models/ScrobblePage";
+import { SimplifiedTrack, simplifyTrack, Track } from "models/ScrobblePage";
 
 export interface ScrobbleDataState {
   value: SimplifiedTrack[];
@@ -13,15 +13,6 @@ const initialState: ScrobbleDataState = {
   value: [],
   status: "idle",
 };
-
-function simplifyTrack(track: Track): SimplifiedTrack {
-  return {
-    artist: track.artist["#text"],
-    name: track.name,
-    date: +track.date.uts,
-    album: track.album["#text"],
-  };
-}
 
 export const scrobbleDataSlice = createSlice({
   name: "scrobbleData",
