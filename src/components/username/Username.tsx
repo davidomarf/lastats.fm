@@ -5,7 +5,7 @@ import { Track } from "models/ScrobblePage";
 import { User } from "models/User";
 import { FormEvent, useRef, useState } from "react";
 import styles from './Username.module.scss';
-import { setUsername as setUsernameRedux } from "./usernameSlice";
+import { setUsername as setUsernameRedux } from "./userSlice";
 
 const cx = classNames.bind(styles);
 

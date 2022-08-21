@@ -1,7 +1,7 @@
 import { useAppSelector } from "@hooks";
 import classNames from "classnames/bind";
 import ActiveLink from "components/ActiveLink";
-import { selectUsername } from "components/username/usernameSlice";
+import { selectUsername } from "components/username/userSlice";
 import { User } from "models/User";
 import Link from "next/link";
 

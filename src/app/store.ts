@@ -1,6 +1,6 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { scrobbleDataReducer } from "components/upload/uploadSlice";
-import { usernameReducer } from "components/username/usernameSlice";
+import { usernameReducer } from "components/username/userSlice";
 
 export function makeStore() {
   return configureStore({
