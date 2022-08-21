@@ -1,8 +1,9 @@
 import { useAppDispatch } from "@hooks";
-import { getUserInfo } from "api/lastfm";
+import { getScrobbles, getUserInfo } from "api/lastfm";
 import classNames from "classnames/bind";
+import { Track } from "models/ScrobblePage";
 import { User } from "models/User";
-import { FormEvent, useCallback, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import styles from './Username.module.scss';
 import { setUsername as setUsernameRedux } from "./usernameSlice";
 
@@ -10,15 +11,62 @@ const cx = classNames.bind(styles);
 
 function UsernameInput() {
   const [username, setUsername] = useState('');
+  const [finished, setFinished] = useState(false);
+
+  const setTotalCSV = (csv: Track[]) => {
+    console.log('all', csv)
+  }
+
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = useCallback((event: FormEvent) => {
+  const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
 
     getUserInfo(username).then((info: User) => {
       dispatch(setUsernameRedux(info))
+      getUserLastTracks(username, info)
     })
-  }, [username])
+  }
+
+  const getUserLastTracks = (
+    async (user: string, info: User) => {
+      if (finished) {
+        return;
+      }
+      try {
+        const ids = new Map();
+        const pc = await getScrobbles(user, 1, 200);
+        if (pc[0]["@attr"]?.nowplaying) {
+          pc.shift();
+        }
+
+        const promises: Promise<Track[]>[] = [];
+        const pages = Math.ceil(info!.playcount! / 200);
+        console.log({ pages });
+        for (let i = 0; i < pages; i++) {
+          promises.push(getScrobbles(user, i + 1, 200));
+        }
+
+        Promise.all(promises).then((trackArray) => {
+          const totalTracks = [];
+          for (const tracks of trackArray) {
+            if (tracks[0]["@attr"]?.nowplaying) {
+              tracks.shift();
+            }
+            totalTracks.push(...tracks);
+          }
+
+          setTotalCSV(totalTracks);
+          setFinished(true);
+        });
+
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  );
+
 
   const usernameInputRef = useRef<HTMLInputElement>(null);
   return (
