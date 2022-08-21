@@ -1,7 +1,5 @@
 function Profile() {
-    return <>
-        This is profile!
-    </>
+  return <>This is profile!</>;
 }
 
 export default Profile;

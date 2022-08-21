@@ -12,6 +12,22 @@ export type Track = {
   mbid: string;
 };
 
+export function SimplifiedTrack(track: Track) {
+  return {
+    artist: track.artist["#text"],
+    name: track.name,
+    date: +track.date.uts,
+    album: track.album["#text"],
+  };
+}
+
+export type SimplifiedTrack = {
+  artist: string;
+  name: string;
+  date: number;
+  album: string;
+};
+
 export type Artist = {
   mbid: string;
   "#text": string;

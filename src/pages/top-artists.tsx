@@ -1,7 +1,5 @@
 function Profile() {
-    return <>
-        This is top-artists!
-    </>
+  return <>This is top-artists!</>;
 }
 
 export default Profile;

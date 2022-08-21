@@ -36,7 +36,6 @@
   }
 
   input {
-    margin-top: 1rem;
   }
 }
 
@@ -50,5 +49,13 @@
     margin-top: 1rem;
     width: 60%;
     min-width: 400px;
+  }
+
+  &__input {
+    margin-top: 1rem;
+  }
+
+  &__button {
+    margin-left: 2rem;
   }
 }

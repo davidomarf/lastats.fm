@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { AppState } from "@store";
 import { LogEntry } from "models/Calendar";
-import { Track } from "models/ScrobblePage";
+import { SimplifiedTrack, Track } from "models/ScrobblePage";
 
 export interface ScrobbleDataState {
-  value: Track[];
+  value: SimplifiedTrack[];
   byDay?: LogEntry;
   status: "idle" | "loading" | "failed";
 }
@@ -19,10 +19,12 @@ export const scrobbleDataSlice = createSlice({
   initialState,
   reducers: {
     setScrobbles: (state, action: PayloadAction<Track[]>) => {
-      state.value = action.payload;
+      const tracks: SimplifiedTrack[] = action.payload.map(SimplifiedTrack);
+      state.value = tracks;
     },
     addScrobbles: (state, action: PayloadAction<Track[]>) => {
-      state.value = [...state.value, ...action.payload];
+      const tracks: SimplifiedTrack[] = action.payload.map(SimplifiedTrack);
+      state.value = [...state.value, ...tracks];
     },
     setByDay: (state, action: PayloadAction<{}>) => {
       state.byDay = action.payload;

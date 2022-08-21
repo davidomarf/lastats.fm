@@ -1,28 +1,4 @@
-.start-action-container {
-  background-color: var(--color-secondary);
-  margin: 0.5rem -2rem;
-  padding: 1rem 2rem;
-
-  cursor: pointer;
-
-  &:not(:first-of-type) {
-    margin-top: 2rem;
-  }
-
-  input {
-    margin-top: 1rem;
-  }
-}
-
-.start-action {
-  &__title {
-    font-size: 1.2rem;
-    color: var(--color-white75);
-  }
-
-  &__description {
-    margin-top: 1rem;
-    width: 60%;
-    min-width: 400px;
-  }
+.introduction-container {
+  max-width: 90%;
+  height: fit-content;
 }

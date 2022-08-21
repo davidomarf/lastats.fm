@@ -91,3 +91,30 @@
     }
   }
 }
+
+.progress-indicator {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+
+  padding: 0.5rem 1rem 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-white50);
+  background-color: var(--color-background);
+
+  .scrobble-count {
+    color: var(--color-white25);
+  }
+
+  &__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    background-color: var(--color-accent);
+  }
+}
