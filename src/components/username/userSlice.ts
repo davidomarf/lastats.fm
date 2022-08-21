@@ -6,12 +6,10 @@ import { User } from "models/User";
 export interface UserState {
   value?: User;
   byDay?: LogEntry;
-  status: "idle" | "loading" | "failed";
 }
 
 const initialState: UserState = {
   value: undefined,
-  status: "idle",
 };
 
 export const userSlice = createSlice({
