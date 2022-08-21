@@ -11,10 +11,19 @@ let cx = classNames.bind(styles);
 
 function Layout({ children }: { children: JSX.Element }) {
   const username = useAppSelector(selectUsername) as User;
+  const fetchedScrobbles = 512;
 
   return <div className={cx("layout")}>
     {username
-      ? <div className={cx('progress-indicator')}>Fetching {username.name} scrobbling history... {username.playcount} total scrobbles</div>
+      ? <div className={cx('progress-indicator')}>
+        <p>
+          Downloading <b>{username.name}</b> history,
+          this make take a while <span className={cx('scrobble-count')}>
+            ({fetchedScrobbles} / {username.playcount} scrobbles)
+          </span>
+        </p>
+        <div className={cx('progress-indicator__bar')} style={{ width: `${100 * (fetchedScrobbles / username.playcount)}%` }}></div>
+      </div>
       : <></>
     }
     <nav className={cx("sidebar")}>

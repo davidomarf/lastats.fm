@@ -95,6 +95,23 @@
 .progress-indicator {
   position: absolute;
   width: 100%;
-  height: 30px;
+  height: 50px;
   bottom: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white50);
+
+  .scrobble-count {
+    color: var(--color-white25);
+  }
+
+  &__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    background-color: var(--color-accent);
+  }
 }
