@@ -1,6 +1,11 @@
-import axios from "axios";
+import { default as axiosOriginal } from "axios";
+import rateLimit from "axios-rate-limit";
 import { RecentTracks, Track } from "models/ScrobblePage";
 import { User } from "models/User";
+
+const axios = rateLimit(axiosOriginal.create(), {
+  maxRPS: 10,
+});
 
 const lastFmAPI =
   process.env.REACT_APP_LAST_FM_API || "ab50ffdf56122232fa11a39059f77a42";
