@@ -18,11 +18,17 @@ export const scrobbleDataSlice = createSlice({
   name: "scrobbleData",
   initialState,
   reducers: {
-    setScrobbles: (state, action: PayloadAction<Track[]>) => {
+    setSimplifiedTracks: (state, action: PayloadAction<SimplifiedTrack[]>) => {
+      state.value = action.payload;
+    },
+    addSimplifiedTracks: (state, action: PayloadAction<SimplifiedTrack[]>) => {
+      state.value = [...state.value, ...action.payload];
+    },
+    setTracks: (state, action: PayloadAction<Track[]>) => {
       const tracks: SimplifiedTrack[] = action.payload.map(SimplifiedTrack);
       state.value = tracks;
     },
-    addScrobbles: (state, action: PayloadAction<Track[]>) => {
+    addTracks: (state, action: PayloadAction<Track[]>) => {
       const tracks: SimplifiedTrack[] = action.payload.map(SimplifiedTrack);
       state.value = [...state.value, ...tracks];
     },
@@ -32,8 +38,13 @@ export const scrobbleDataSlice = createSlice({
   },
 });
 
-export const { setScrobbles, addScrobbles, setByDay } =
-  scrobbleDataSlice.actions;
+export const {
+  setSimplifiedTracks,
+  addSimplifiedTracks,
+  setTracks,
+  addTracks,
+  setByDay,
+} = scrobbleDataSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

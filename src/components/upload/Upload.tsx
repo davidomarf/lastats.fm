@@ -1,10 +1,12 @@
 import { useAppDispatch } from "@hooks";
+import { getUserInfo } from "api/lastfm";
 import classNames from "classnames/bind";
-import { Track } from "models/ScrobblePage";
+import { setUser } from "components/username/userSlice";
+import { SimplifiedTrack } from "models/ScrobblePage";
 import * as Papa from "papaparse";
 import { useEffect, useRef, useState } from "react";
 import styles from "./Upload.module.scss";
-import { setScrobbles } from "./uploadSlice";
+import { setSimplifiedTracks } from "./uploadSlice";
 
 let cx = classNames.bind(styles);
 
@@ -24,11 +26,19 @@ function Upload() {
 
     setIsProcessing(true);
 
-    Papa.parse<Track>(uploadedFile, {
+    // TODO: Add modal to confirm username before actually setting it in app state
+    const username = uploadedFile.name
+      // Remove file extension
+      .replace(/\.\w+$/, "")
+      // Remove everything after first space
+      .replace(/\s.*/, "");
+    getUserInfo(username).then((user) => dispatch(setUser(user)));
+
+    Papa.parse<SimplifiedTrack>(uploadedFile, {
       header: true,
       complete: ({ data }) => {
         setIsProcessing(false);
-        dispatch(setScrobbles(data));
+        dispatch(setSimplifiedTracks(data));
       },
     });
   }, [dispatch, uploadedFile, setIsProcessing]);

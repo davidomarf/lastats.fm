@@ -1,11 +1,11 @@
 import { useAppDispatch } from "@hooks";
 import { getScrobbles, getUserInfo } from "api/lastfm";
 import classNames from "classnames/bind";
-import { addScrobbles } from "components/upload/uploadSlice";
+import { addTracks } from "components/upload/uploadSlice";
 import { User } from "models/User";
 import { FormEvent, useRef, useState } from "react";
 import styles from "./Username.module.scss";
-import { setUsername as setUsernameRedux } from "./userSlice";
+import { setUser as setUsernameRedux } from "./userSlice";
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +41,7 @@ function UsernameInput() {
               if (tracks[0]["@attr"]?.nowplaying) {
                 tracks.shift();
               }
-              dispatch(addScrobbles(tracks));
+              dispatch(addTracks(tracks));
             })
             // TODO: Add handling for rejected requests, so they can be retried
             .catch((error) => console.error(error))
