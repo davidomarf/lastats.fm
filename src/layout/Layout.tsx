@@ -6,7 +6,6 @@ import { selectUsername } from "components/username/userSlice";
 import Link from "next/link";
 import { CSVLink } from "react-csv";
 
-import { Track } from "models/ScrobblePage";
 import styles from './Layout.module.scss';
 
 let cx = classNames.bind(styles);
@@ -14,17 +13,6 @@ let cx = classNames.bind(styles);
 function Layout({ children }: { children: JSX.Element }) {
   const username = useAppSelector(selectUsername);
   const scrobbles = useAppSelector(selectScrobbleData);
-
-  const cleanUserData = (userTracks: Track[]) => {
-    return userTracks.map((track: Track) => {
-      return {
-        name: track.name,
-        artist: track.artist["#text"],
-        album: track.album["#text"],
-        uts: track.date.uts
-      };
-    });
-  };
 
   return <div className={cx("layout")}>
     {username
@@ -41,13 +29,13 @@ function Layout({ children }: { children: JSX.Element }) {
         : <div className={cx('progress-indicator')}>
           <p>
             All your scrobbles have been fetched! To save the fetching time in future sessions, <button
-              className={styles["export"]}
+              className="button button--as-text"
               type="button"
               name="Export scrobbles"
               formTarget="_blank"
             >
-              <CSVLink filename={username.name} data={cleanUserData(scrobbles)}>
-                Download your lastats.fm CSV
+              <CSVLink filename={username.name} data={scrobbles}>
+                download your lastats.fm CSV
               </CSVLink>
             </button>
           </p>

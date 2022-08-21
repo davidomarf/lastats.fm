@@ -105,7 +105,7 @@ function UsernameInput() {
           placeholder="Username"
           onChange={event => setUsername(event.target.value)}
         />
-        <button type="submit"> Go -> </button>
+        <button type="submit" className="button" style={{ marginLeft: '2rem' }}> Get my scrobbles! </button>
       </form>
     </div>
   );

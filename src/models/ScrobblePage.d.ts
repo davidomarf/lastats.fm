@@ -12,6 +12,13 @@ export type Track = {
   mbid: string;
 };
 
+export type SimplifiedTrack = {
+  artist: string;
+  name: string;
+  date: number;
+  album: string;
+};
+
 export type Artist = {
   mbid: string;
   "#text": string;
