@@ -12,20 +12,19 @@ export type Track = {
   mbid: string;
 };
 
-export type SimplifiedTrack = {
+export class SimplifiedTrack {
   artist: string;
   name: string;
   date: number;
   album: string;
-};
 
-function simplifyTrack(track: Track): SimplifiedTrack {
-  return {
-    artist: track.artist["#text"],
-    name: track.name,
-    date: +track.date.uts,
-    album: track.album["#text"],
-  };
+  constructor(track: Track) {
+    this.artist = track.artist["#text"];
+    this.name = track.name;
+    this.date = +track.date.uts;
+    this.album = track.album["#text"];
+    return this;
+  }
 }
 
 export type Artist = {

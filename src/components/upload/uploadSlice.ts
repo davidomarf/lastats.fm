@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { AppState } from "@store";
 import { LogEntry } from "models/Calendar";
-import { SimplifiedTrack, simplifyTrack, Track } from "models/ScrobblePage";
+import { SimplifiedTrack, Track } from "models/ScrobblePage";
 
 export interface ScrobbleDataState {
   value: SimplifiedTrack[];
@@ -19,11 +19,15 @@ export const scrobbleDataSlice = createSlice({
   initialState,
   reducers: {
     setScrobbles: (state, action: PayloadAction<Track[]>) => {
-      const tracks: SimplifiedTrack[] = action.payload.map(simplifyTrack);
+      const tracks: SimplifiedTrack[] = action.payload.map(
+        (e) => new SimplifiedTrack(e)
+      );
       state.value = tracks;
     },
     addScrobbles: (state, action: PayloadAction<Track[]>) => {
-      const tracks: SimplifiedTrack[] = action.payload.map(simplifyTrack);
+      const tracks: SimplifiedTrack[] = action.payload.map(
+        (e) => new SimplifiedTrack(e)
+      );
       state.value = [...state.value, ...tracks];
     },
     setByDay: (state, action: PayloadAction<{}>) => {
