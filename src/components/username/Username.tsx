@@ -2,7 +2,6 @@ import { useAppDispatch } from "@hooks";
 import { getScrobbles, getUserInfo } from "api/lastfm";
 import classNames from "classnames/bind";
 import { addScrobbles } from "components/upload/uploadSlice";
-import { Track } from "models/ScrobblePage";
 import { User } from "models/User";
 import { FormEvent, useRef, useState } from "react";
 import styles from './Username.module.scss';
@@ -33,26 +32,28 @@ function UsernameInput() {
       try {
         const pageSize = 200;
 
-        const promises: Promise<Track[]>[] = [];
+        const promises: Promise<void>[] = [];
         const pages = Math.ceil(info!.playcount! / pageSize);
 
         for (let i = 0; i < pages; i++) {
-          promises.push(getScrobbles(user, i + 1, pageSize));
+          promises.push(
+            getScrobbles(user, i + 1, pageSize)
+              .then(tracks => {
+                if (tracks[0]["@attr"]?.nowplaying) {
+                  tracks.shift();
+                }
+                dispatch(addScrobbles(tracks));
+              })
+              // TODO: Add handling for rejected requests, so they can be retried
+              .catch(error => console.error(error)));
         }
-
-        promises.forEach(promise =>
-          promise.then(tracks => {
-            if (tracks[0]["@attr"]?.nowplaying) {
-              tracks.shift();
-            }
-            dispatch(addScrobbles(tracks));
-          }).catch(error => console.error(error))
-        )
 
         Promise.allSettled(promises).then((results) => {
           if (results.some(result => result.status === 'rejected')) {
             console.error('Failed to fetch some pages. Please try again.');
           }
+
+          // TODO: Add handling for rejected requests, so they can be retried
           setFinished(true);
         });
       } catch (error) {
