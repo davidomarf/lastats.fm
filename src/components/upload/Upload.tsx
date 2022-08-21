@@ -42,7 +42,7 @@ function Upload() {
           Upload an existing laststs.fm CSV,
         </div>
         <div className={cx('start-action__description')}>
-          and it&apos;ll immediately load all the saved data, while updating the
+          and it'll immediately load all the saved data, while updating the
           uploaded file with your last scrobbles
         </div>
         <p>

@@ -29,7 +29,7 @@ const IndexPage: NextPage = () => {
             If you have a last.fm account, that probably means you love music.
           </h3>
           <h3>
-            And that may mean that, at least once, you&apos;ve wondered...
+            And that may mean that, at least once, you've wondered...
           </h3>
           <ul>
             <li>
@@ -53,11 +53,11 @@ const IndexPage: NextPage = () => {
           </ul>
 
           <p>
-            If you have, you&apos;ll find lastats.fm interesting.
+            If you have, you'll find lastats.fm interesting.
           </p>
 
           <h3>
-            Wanna try? Let&apos;s start!
+            Wanna try? Let's start!
           </h3>
 
           <UsernameInput></UsernameInput>
