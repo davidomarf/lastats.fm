@@ -65,16 +65,6 @@ const IndexPage: NextPage = () => {
 
         </div>
       </section>
-
-      {/*scrobbleData?.length ? (
-        <>
-          <Link href="/">
-            <a>Clean filters</a>
-          </Link>
-          <CalendarHeatmap artistToSearch={artist as string} />
-        </>
-      ) : null*/}
-
     </>
   );
 };
