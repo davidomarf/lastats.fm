@@ -14,10 +14,6 @@ function UsernameInput() {
   const [username, setUsername] = useState('');
   const [finished, setFinished] = useState(false);
 
-  const setTotalCSV = (csv: Track[]) => {
-    console.log('all', csv)
-  }
-
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = (event: FormEvent) => {
@@ -37,14 +33,9 @@ function UsernameInput() {
       try {
         const pageSize = 200;
 
-        const pc = await getScrobbles(user, 1, pageSize);
-        if (pc[0]["@attr"]?.nowplaying) {
-          pc.shift();
-        }
-
         const promises: Promise<Track[]>[] = [];
         const pages = Math.ceil(info!.playcount! / pageSize);
-        console.log({ pages });
+
         for (let i = 0; i < pages; i++) {
           promises.push(getScrobbles(user, i + 1, pageSize));
         }
@@ -55,23 +46,15 @@ function UsernameInput() {
               tracks.shift();
             }
             dispatch(addScrobbles(tracks));
-          })
+          }).catch(error => console.error(error))
         )
 
-        Promise.all(promises).then((trackArray) => {
-          const totalTracks = [];
-          for (const tracks of trackArray) {
-            if (tracks[0]["@attr"]?.nowplaying) {
-              tracks.shift();
-            }
-            totalTracks.push(...tracks);
+        Promise.allSettled(promises).then((results) => {
+          if (results.some(result => result.status === 'rejected')) {
+            console.error('Failed to fetch some pages. Please try again.');
           }
-
-          setTotalCSV(totalTracks);
           setFinished(true);
         });
-
-
       } catch (error) {
         console.error(error);
       }
