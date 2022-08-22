@@ -16,13 +16,13 @@ export const userSlice = createSlice({
   name: "username",
   initialState,
   reducers: {
-    setUsername: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User>) => {
       state.value = action.payload;
     },
   },
 });
 
-export const { setUsername } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
